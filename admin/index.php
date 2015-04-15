@@ -36,5 +36,6 @@ if(!isset($_SESSION["username"])) {
 		<h1>Admin</h1>
 		<a href="login.php?action=logout">Logout</a><br>
 		<a href="users.php">Users</a><br>
+		<a href="files.php">File Explorer</a><br>
 	</body>
 </html>
