@@ -1,5 +1,9 @@
 <?php
+define("LOGOUT","");
+require("util.php");
+
 $action = isset( $_GET['action'] ) ? $_GET['action'] : "";
+//Need to eventually use action to show banners
 ?>
 <html>
 	<head>
