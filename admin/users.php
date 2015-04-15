@@ -42,11 +42,8 @@ if(!$users) {
 			header( "Location: users.php" );
 		}
 		else if($action == "delete") {
-		$row = $users->getRow($_GET["index"]);
-		echo $row->index;
-		echo $row->name;
-		$users->deleteRow($_GET["index"]);
-			header( "Location: users.php" );
+		  $users->deleteRow($_GET["index"]);
+		    header( "Location: users.php" );
 		}
 		else {
 		  $rows = $users->getRows();
