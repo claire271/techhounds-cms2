@@ -23,7 +23,7 @@ if(!$users) {
 				Password <input type="password" name="password"><br>
 				<input type="submit" value="Submit">
 			</form>
-			<a href="users.php?action=delete&index=<?php echo $row->index ?>">Delete</a>
+			<?php if($action == "view"){ ?> <a href="users.php?action=delete&index=<?php echo $row->index ?>">Delete</a><?php } ?>
 			<a href="users.php">Cancel</a>
 		<?php
 		}
