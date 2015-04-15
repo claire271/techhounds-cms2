@@ -31,11 +31,14 @@ if(!isset($_SESSION["username"])) {
 <html>
 	<head>
 		<title>Admin</title>
+		<link rel="stylesheet" type="text/css" href="css/style.css">
 	</head>
 	<body>
-		<h1>Admin</h1>
-		<a href="login.php?action=logout">Logout</a><br>
-		<a href="users.php">Users</a><br>
-		<a href="files.php">File Explorer</a><br>
+		<div class="body-container">
+			<h1>Admin</h1>
+			<a href="login.php?action=logout">Logout</a><br>
+			<a href="users.php">Users</a><br>
+			<a href="files.php">File Explorer</a><br>
+		</div>
 	</body>
 </html>
