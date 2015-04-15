@@ -23,6 +23,7 @@ if(!$users) {
 				Password <input type="password" name="password"><br>
 				<input type="submit" value="Submit">
 			</form>
+			<?php if($action == "view"){ ?> <a href="users.php?action=delete&index=<?php echo $row->index ?>">Delete</a><?php } ?>
 			<a href="users.php">Cancel</a>
 		<?php
 		}
@@ -35,10 +36,14 @@ if(!$users) {
 		  }
 		  $row->name = $_POST["username"];
 		  $row->hash = hash("md5", $_POST["password"]);
-			$_SESSION["username"] = $row->name;
+		  $_SESSION["username"] = $row->name;
 		  $row->write();
 		
 			header( "Location: users.php" );
+		}
+		else if($action == "delete") {
+		  $users->deleteRow($_GET["index"]);
+		    header( "Location: users.php" );
 		}
 		else {
 		  $rows = $users->getRows();
