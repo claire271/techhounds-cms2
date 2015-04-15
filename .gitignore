@@ -1,0 +1,10 @@
+# Ignore everything
+*
+
+# But not these files...
+!.gitignore
+!.gitmodules
+!README.md
+!fix_perms.sh
+!admin
+!db
