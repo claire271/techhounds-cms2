@@ -14,20 +14,25 @@ if(!$users) {
 	<body>
 		<h1>Users</h1>
 		<?php
-		if($action == "view") {
+		if($action == "view" || $action == "add") {
 			$row = $users->getRow($_GET["index"]);
 		?>
 			User <?php echo $row->index ?> <br>
-			<form action="users.php?action=save&index=<?php echo $row->index ?>" method="POST">
-				Username <input type="text" name="username" value="<?php echo $row->name ?>"><br>
+			<form action="users.php?action=<?php if ($action == "view"){ echo('save&index='); echo $row->index; } else if ($action == "add"){ echo('create');} ?>" method="POST">
+				Username <input type="text" name="username" value="<?php if ($action == "view") echo $row->name ?>"><br>
 				Password <input type="password" name="password"><br>
-				<input type="submit" value="Save">
+				<input type="submit" value="Submit">
 			</form>
 			<a href="users.php">Cancel</a>
 		<?php
 		}
-		else if($action == "save") {
-		  $row = $users->getRow($_GET["index"]);
+		else if($action == "save" || $action == "create") {
+		  if($action == "save"){
+		    $row = $users->getRow($_GET["index"]);
+		  }
+		  else if ($action == "create"){
+		    $row = $users->createRow();
+		  }
 		  $row->name = $_POST["username"];
 		  $row->hash = hash("md5", $_POST["password"]);
 			$_SESSION["username"] = $row->name;
@@ -45,6 +50,7 @@ if(!$users) {
 		}
 		?>
 		<br>
+		<a href="users.php?action=add">Add</a>
 		<a href="index.php">Back</a>
 	</body>
 </html>
