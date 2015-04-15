@@ -34,10 +34,7 @@ if(!isset($_SESSION["username"])) {
 	</head>
 	<body>
 		<h1>Admin</h1>
-		<a href="login.php?action=logout">Logout</a>
-		<pre>
-			<?php
-			?>
-		</pre>
+		<a href="login.php?action=logout">Logout</a><br>
+		<a href="users.php">Users</a><br>
 	</body>
 </html>
