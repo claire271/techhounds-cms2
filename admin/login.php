@@ -10,11 +10,13 @@ require("util.php");
 		<link rel="stylesheet" type="text/css" href="css/style.css">
 	</head>
 	<body>
-		<h1>Admin Login</h1>
 		<form id="login" action="index.php?action=login" method="POST">
-			Username: <input type="text" name="username"><br>
-			Password: <input type="password" name="password"><br>
-			<input type="submit" value="Login">
+			<h1>Admin Login</h1>
+			Username:<br>
+			<input type="text" name="username"><br>
+			Password:<br>
+			<input type="password" name="password"><br><br>
+			<input type="submit" class="pull-right" value="Login">
 		</form>
 	</body>
 </html>

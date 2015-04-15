@@ -14,6 +14,24 @@ body {
 }
 
 #login {
-	width: 500px;
+	width: 320px;
 	margin: auto;
+	margin-top: 150px;
+	padding: 20px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	overflow: hidden;
+}
+
+input[type=text],
+input[type=password]{
+	width:100%;
+}
+
+.pull-left {
+	float: left;
+}
+
+.pull-right {
+	float: right;
 }
