@@ -4,7 +4,7 @@ $action = isset( $_GET['action'] ) ? $_GET['action'] : "";
 <html>
 	<head>
 		<title>Admin Login</title>
-		<link rel="stylesheet" type="text/css" href="../css/style.css">
+		<link rel="stylesheet" type="text/css" href="css/style.css">
 	</head>
 	<body>
 		<h1>Admin Login</h1>
