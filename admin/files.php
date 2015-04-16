@@ -44,6 +44,27 @@ foreach($pages as $page) {
 	}
 }
 
+if($action == "delete") {
+	if($_GET["type"] == "dir") {
+		$real_path = $file_path . "/" . $_GET["name"];
+		rmdir($real_path);
+		header( "Location: files.php?path=" . $path);
+	}
+	else if($_GET["type"] == "static") {
+		$real_path = $file_path . "/" . $_GET["name"];
+		unlink($real_path);
+		header( "Location: files.php?path=" . $path);
+	}
+	else if($_GET["type"] == "dynamic") {
+		$real_path = $file_path . "/" . $_GET["name"];
+		if(file_exists($real_path)) {
+			unlink($real_path);
+		}
+		$pages_table->deleteRow($_GET["index"]);
+		header( "Location: files.php?path=" . $path);
+	}
+}
+
 ?>
 <html>
 	<head>
@@ -51,22 +72,40 @@ foreach($pages as $page) {
 	</head>
 	<body>
 		<h1>Index of <?php echo $path ?></h1>
+		<a href="index.php">Back</a><br>
+		<form action="files.php?action=newdir&path=<?php echo $path ?>" method="POST">
+			<input type="text" name="name">
+			<input type="submit" value="Create Directory">
+		</form>
+		<form action="files.php?action=newdir&path=<?php echo $path ?>" method="POST">
+			<input type="text" name="name">
+			<input type="submit" value="Create Static File">
+		</form>
+		<form action="files.php?action=newdynamic&path=<?php echo $path ?>" method="POST">
+			<input type="text" name="name">
+			<input type="submit" value="Create Dynamic File">
+		</form>
+
+		<br>
 		<?php
 		foreach($files as $file) {
 			$new_path = cleanPath($path . "/" . $file->name);
 			if($file->flag == "dir") {
 		?>
-			<a href="files.php?path=<?php echo $new_path ?>" style="color:#0000FF"><?php echo $file->name ?></a><br/>
+			<a href="files.php?action=delete&type=dir&path=<?php echo $path ?>&name=<?php echo $file->name ?>" style="color:#0F0F0F">x</a>
+			<a href="files.php?path=<?php echo $new_path ?>" style="color:#0000FF"><?php echo $file->name ?></a><br>
 		<?php
 		  }
 		  else if($file->flag == "static") {
 		?>
-			<a href="static.php?path=<?php echo $new_path ?>" style="color:#FF0000"><?php echo $file->name ?></a><br/>
+			<a href="files.php?action=delete&type=static&path=<?php echo $path ?>&name=<?php echo $file->name ?>" style="color:#0F0F0F">x</a>
+			<a href="static.php?path=<?php echo $new_path ?>" style="color:#FF0000"><?php echo $file->name ?></a><br>
 		<?php
 		  }
 		  else if($file->flag == "dynamic") {
 		?>
-			<a href="dynamic.php?path=<?php echo $new_path ?>&index=<?php echo $file->index ?>" style="color:#FF00FF"><?php echo $file->name ?></a><br/>
+			<a href="files.php?action=delete&type=dynamic&path=<?php echo $path ?>&name=<?php echo $file->name ?>&index=<?php echo $file->index ?>" style="color:#0F0F0F">x</a>
+			<a href="dynamic.php?path=<?php echo $new_path ?>&index=<?php echo $file->index ?>" style="color:#FF00FF"><?php echo $file->name ?></a><br>
 		<?php
 		  }
 		}
