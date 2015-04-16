@@ -1,8 +1,6 @@
 <?php
 define("LOGOUT","");
 require("util.php");
-
-//Need to eventually use action to show banners
 ?>
 <html>
 	<head>
@@ -20,12 +18,13 @@ require("util.php");
 		}
 		?>
 		<form id="login" action="index.php?action=login" method="POST">
-			<h1>Admin Login</h1>
+			<h2>TechHOUNDS</h2>
+			<h3>Admin Login</h3>
 			Username:<br>
 			<input type="text" name="username"><br>
 			Password:<br>
 			<input type="password" name="password"><br><br>
-			<input type="submit" class="pull-right" value="Login">
+			<input type="submit" value="Login">
 		</form>
 	</body>
 </html>

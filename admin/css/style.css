@@ -23,11 +23,6 @@ body {
 	overflow: hidden;
 }
 
-input[type=text],
-input[type=password]{
-	width:100%;
-}
-
 .pull-left {
 	float: left;
 }
@@ -65,4 +60,44 @@ input[type=password]{
 	color: #3C763D;
 	background-color: #DFF0D8;
 	border-color: #D6E9C6;
+}
+
+/*
+  Button stuff
+*/
+
+input[type=button],
+input[type=submit] {
+	background-color: white;
+	padding: 8px 10px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+	cursor: pointer;
+}
+
+input[type=button]:hover,
+input[type=submit]:hover,
+input[type=button]:focus,
+input[type=submit]:focus {
+	background-color: #ddd;
+} {
+	background-color: #ddd;
+}
+
+/*
+  Text input stuff
+*/
+
+input[type=text],
+input[type=password]{
+	width:100%;
+	background-color: white;
+	padding: 8px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+input[type=text]:focus,
+input[type=password]:focus {
+	border-color: #aaa;
 }
