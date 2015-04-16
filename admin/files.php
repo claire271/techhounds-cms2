@@ -18,7 +18,7 @@ for($i = 0;$i < count($files);$i++) {
 	$name = $files[$i];
 	$files[$i] = new stdClass();
 	$files[$i]->name = $name;
-	if(is_dir($file_path . "/" . $name)) {
+	if(is_dir(cleanPath($file_path . "/" . $name))) {
 		$files[$i]->flag = "dir";
 	}
 	else {
@@ -46,15 +46,15 @@ foreach($pages as $page) {
 
 if($action == "delete") {
 	if($_GET["type"] == "dir") {
-		$real_path = $file_path . "/" . $_GET["name"];
+		$real_path = cleanPath($file_path . "/" . $_GET["name"]);
 		rmdir($real_path);
 	}
 	else if($_GET["type"] == "static") {
-		$real_path = $file_path . "/" . $_GET["name"];
+		$real_path = cleanPath($file_path . "/" . $_GET["name"]);
 		unlink($real_path);
 	}
 	else if($_GET["type"] == "dynamic") {
-		$real_path = $file_path . "/" . $_GET["name"];
+		$real_path = cleanPath($file_path . "/" . $_GET["name"]);
 		if(file_exists($real_path)) {
 			unlink($real_path);
 		}
@@ -63,20 +63,20 @@ if($action == "delete") {
 	header( "Location: files.php?path=" . $path);
 }
 else if($action == "newdir") {
-	$real_path = $file_path . "/" . $_POST["name"];
+	$real_path = cleanPath($file_path . "/" . $_POST["name"]);
 	mkdir($real_path);
 	chmod($real_path,0775);
 	header( "Location: files.php?path=" . $path);
 }
 else if($action == "newstatic") {
-	$real_path = $file_path . "/" . $_POST["name"];
+	$real_path = cleanPath($file_path . "/" . $_POST["name"]);
 	touch($real_path);
 	chmod($real_path,0664);
 	header( "Location: files.php?path=" . $path);
 }
 else if($action == "newdynamic") {
 	$page = $pages_table->createRow();
-	$page->out_path = $path . "/" . $_POST["name"];
+	$page->out_path = cleanPath($path . "/" . $_POST["name"]);
 	$page->write();
 	header( "Location: files.php?path=" . $path);
 }
