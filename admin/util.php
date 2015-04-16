@@ -15,4 +15,29 @@ else if(!defined("MAIN") && !isset($_SESSION["username"])) {
 }
 
 $action = isset( $_GET['action'] ) ? $_GET['action'] : "";
+
+//Some utility functions
+
+//Always returns with no trailing slash
+function cleanPath($path) {
+	$path = str_replace("\\","/",$path);
+	$leading = substr($path,0,1) == "/";
+
+  $substrings = explode("/",$path);
+	
+  $parts = array();
+	foreach($substrings as $substring) {
+    if($substring == "..") {
+      array_pop($parts);
+    }
+    else if($substring == ".") {}
+    else if($substring == "") {}
+    else {
+      array_push($parts,$substring);
+    }
+  }
+
+  return ($leading ? "/" : "") . implode("/",$parts);
+}
 ?>
+
