@@ -17,7 +17,12 @@ if(!$users) {
 		if($action == "view" || $action == "add") {
 			$row = $users->getRow($_GET["index"]);
 		?>
-			User <?php echo $row->index ?> <br>
+			<?php
+			if($action == "view") { ?>
+				User <?php echo $row->index ?><br>
+			<?php
+			}
+			?>
 			<form action="users.php?action=<?php if ($action == "view"){ echo('save&index='); echo $row->index; } else if ($action == "add"){ echo('create');} ?>" method="POST">
 				Username <input type="text" name="username" value="<?php if ($action == "view") echo $row->name ?>"><br>
 				Password <input type="password" name="password"><br>
