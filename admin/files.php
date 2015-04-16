@@ -48,12 +48,10 @@ if($action == "delete") {
 	if($_GET["type"] == "dir") {
 		$real_path = $file_path . "/" . $_GET["name"];
 		rmdir($real_path);
-		header( "Location: files.php?path=" . $path);
 	}
 	else if($_GET["type"] == "static") {
 		$real_path = $file_path . "/" . $_GET["name"];
 		unlink($real_path);
-		header( "Location: files.php?path=" . $path);
 	}
 	else if($_GET["type"] == "dynamic") {
 		$real_path = $file_path . "/" . $_GET["name"];
@@ -61,8 +59,26 @@ if($action == "delete") {
 			unlink($real_path);
 		}
 		$pages_table->deleteRow($_GET["index"]);
-		header( "Location: files.php?path=" . $path);
 	}
+	header( "Location: files.php?path=" . $path);
+}
+else if($action == "newdir") {
+	$real_path = $file_path . "/" . $_POST["name"];
+	mkdir($real_path);
+	chmod($real_path,0775);
+	header( "Location: files.php?path=" . $path);
+}
+else if($action == "newstatic") {
+	$real_path = $file_path . "/" . $_POST["name"];
+	touch($real_path);
+	chmod($real_path,0664);
+	header( "Location: files.php?path=" . $path);
+}
+else if($action == "newdynamic") {
+	$page = $pages_table->createRow();
+	$page->out_path = $path . "/" . $_POST["name"];
+	$page->write();
+	header( "Location: files.php?path=" . $path);
 }
 
 ?>
@@ -77,7 +93,7 @@ if($action == "delete") {
 			<input type="text" name="name">
 			<input type="submit" value="Create Directory">
 		</form>
-		<form action="files.php?action=newdir&path=<?php echo $path ?>" method="POST">
+		<form action="files.php?action=newstatic&path=<?php echo $path ?>" method="POST">
 			<input type="text" name="name">
 			<input type="submit" value="Create Static File">
 		</form>
