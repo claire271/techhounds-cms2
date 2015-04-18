@@ -36,6 +36,7 @@ if(!isset($_SESSION["username"])) {
 	<body>
 		<div class="body-container">
 			<h1>Admin</h1>
+			<p>Logged in as <b><?php echo $_SESSION["username"] ?></b></p>
 			<a href="login.php?action=logout">Logout</a><br>
 			<a href="users.php">Users</a><br>
 			<a href="files.php">File Explorer</a><br>
