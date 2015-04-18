@@ -74,8 +74,8 @@ if($action == "save") {
 	<body>
 		<form action="dynamic.php?action=save&path=<?php echo $path ?>&index=<?php echo $page->index ?>" method="POST">
 			<h1><?php echo $path ?></h1>
-			<input type="text" name="title" value="<?php echo htmlspecialchars($page->title) ?>"><br>
-			<input type="text" name="template_path" value="<?php echo htmlspecialchars($page->template_path) ?>"><br>
+			<input type="text" name="title" placeholder="Title" value="<?php echo htmlspecialchars($page->title) ?>"><br>
+			<input type="text" name="template_path" placeholder="Template Path" value="<?php echo htmlspecialchars($page->template_path) ?>"><br>
 			<textarea name="body" placeholder="The body of the file" style="height: 30em; width: 80%;"><?php echo htmlspecialchars($page->body) ?></textarea><br>
 			Last edited: <?php echo htmlspecialchars($page->date) ?><br>
 			<input type="submit" value="Save">

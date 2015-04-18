@@ -80,6 +80,25 @@ else if($action == "newdynamic") {
 	$page->write();
 	header( "Location: files.php?path=" . $path);
 }
+else if($action == "rename") {
+	$in = $_POST["in"];
+	$out = $_POST["out"];
+	foreach($files as $file) {
+		if($file->name != ".." && $file->name != "." && $file->name == basename($in)) {
+			if($file->flag == "static" || $file->flag == "dir") {
+				rename(cleanPath(ROOT_PATH . $in),cleanPath(ROOT_PATH . $out));
+			}
+			else if($file->flag == "dynamic") {
+				rename(cleanPath(ROOT_PATH . $in),cleanPath(ROOT_PATH . $out));
+				$page = $pages_table->getRow($file->index);
+				$page->out_path = cleanPath($out);
+				$page->write();
+			}
+			break;
+		}
+	}
+	header( "Location: files.php?path=" . $path);
+}
 
 ?>
 <html>
@@ -100,6 +119,11 @@ else if($action == "newdynamic") {
 		<form action="files.php?action=newdynamic&path=<?php echo $path ?>" method="POST">
 			<input type="text" name="name">
 			<input type="submit" value="Create Dynamic File">
+		</form>
+		<form action="files.php?action=rename&path=<?php echo $path ?>" method="POST">
+			IN: <input type="text" name="in" value="<?php echo $path ?>"><br/>
+			OUT: <input type="text" name="out" value="<?php echo $path ?>"><br/>
+			<input type="submit" value="Rename File">
 		</form>
 
 		<br>
