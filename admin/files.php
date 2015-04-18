@@ -104,51 +104,54 @@ else if($action == "rename") {
 <html>
 	<head>
 		<title>File Explorer</title>
+		<link rel="stylesheet" type="text/css" href="css/style.css">
 	</head>
 	<body>
-		<h1>Index of <?php echo $path ?></h1>
-		<a href="index.php">Back</a><br>
-		<form action="files.php?action=newdir&path=<?php echo $path ?>" method="POST">
-			<input type="text" name="name">
-			<input type="submit" value="Create Directory">
-		</form>
-		<form action="files.php?action=newstatic&path=<?php echo $path ?>" method="POST">
-			<input type="text" name="name">
-			<input type="submit" value="Create Static File">
-		</form>
-		<form action="files.php?action=newdynamic&path=<?php echo $path ?>" method="POST">
-			<input type="text" name="name">
-			<input type="submit" value="Create Dynamic File">
-		</form>
-		<form action="files.php?action=rename&path=<?php echo $path ?>" method="POST">
-			IN: <input type="text" name="in" value="<?php echo $path ?>"><br/>
-			OUT: <input type="text" name="out" value="<?php echo $path ?>"><br/>
-			<input type="submit" value="Rename File">
-		</form>
+		<div class="body-container">
+			<h1>Index of <?php echo $path ?></h1>
+			<a href="index.php">Back</a><br>
+			<form action="files.php?action=newdir&path=<?php echo $path ?>" method="POST">
+				<input type="text" name="name">
+				<input type="submit" value="Create Directory">
+			</form>
+			<form action="files.php?action=newstatic&path=<?php echo $path ?>" method="POST">
+				<input type="text" name="name">
+				<input type="submit" value="Create Static File">
+			</form>
+			<form action="files.php?action=newdynamic&path=<?php echo $path ?>" method="POST">
+				<input type="text" name="name">
+				<input type="submit" value="Create Dynamic File">
+			</form>
+			<form action="files.php?action=rename&path=<?php echo $path ?>" method="POST">
+				IN: <input type="text" name="in" value="<?php echo $path ?>"><br/>
+				OUT: <input type="text" name="out" value="<?php echo $path ?>"><br/>
+				<input type="submit" value="Rename File">
+			</form>
 
-		<br>
-		<?php
-		foreach($files as $file) {
-			$new_path = cleanPath($path . "/" . $file->name);
-			if($file->flag == "dir") {
-		?>
-			<a href="files.php?action=delete&type=dir&path=<?php echo $path ?>&name=<?php echo $file->name ?>" style="color:#0F0F0F">x</a>
-			<a href="files.php?path=<?php echo $new_path ?>" style="color:#0000FF"><?php echo $file->name ?></a><br>
-		<?php
-		  }
-		  else if($file->flag == "static") {
-		?>
-			<a href="files.php?action=delete&type=static&path=<?php echo $path ?>&name=<?php echo $file->name ?>" style="color:#0F0F0F">x</a>
-			<a href="static.php?path=<?php echo $new_path ?>" style="color:#FF0000"><?php echo $file->name ?></a><br>
-		<?php
-		  }
-		  else if($file->flag == "dynamic") {
-		?>
-			<a href="files.php?action=delete&type=dynamic&path=<?php echo $path ?>&name=<?php echo $file->name ?>&index=<?php echo $file->index ?>" style="color:#0F0F0F">x</a>
-			<a href="dynamic.php?path=<?php echo $new_path ?>&index=<?php echo $file->index ?>" style="color:#FF00FF"><?php echo $file->name ?></a><br>
-		<?php
-		  }
-		}
-		?>
+			<br>
+			<?php
+			foreach($files as $file) {
+				$new_path = cleanPath($path . "/" . $file->name);
+				if($file->flag == "dir") {
+			?>
+				<a href="files.php?action=delete&type=dir&path=<?php echo $path ?>&name=<?php echo $file->name ?>" style="color:#0F0F0F">x</a>
+				<a href="files.php?path=<?php echo $new_path ?>" style="color:#0000FF"><?php echo $file->name ?></a><br>
+			<?php
+			}
+			else if($file->flag == "static") {
+			?>
+				<a href="files.php?action=delete&type=static&path=<?php echo $path ?>&name=<?php echo $file->name ?>" style="color:#0F0F0F">x</a>
+				<a href="static.php?path=<?php echo $new_path ?>" style="color:#FF0000"><?php echo $file->name ?></a><br>
+			<?php
+			}
+			else if($file->flag == "dynamic") {
+			?>
+				<a href="files.php?action=delete&type=dynamic&path=<?php echo $path ?>&name=<?php echo $file->name ?>&index=<?php echo $file->index ?>" style="color:#0F0F0F">x</a>
+				<a href="dynamic.php?path=<?php echo $new_path ?>&index=<?php echo $file->index ?>" style="color:#FF00FF"><?php echo $file->name ?></a><br>
+			<?php
+			}
+			}
+			?>
+		</div>
 	</body>
 </html>
