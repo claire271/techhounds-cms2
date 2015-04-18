@@ -6,7 +6,7 @@ html {
 	-webkit-text-size-adjust: 100%; /* 2 */
 	font-size: 14px;
 	line-height: 1.428571429;
-	color: #333333;
+	color: #333;
 }
 
 body {
@@ -67,20 +67,23 @@ body {
 */
 
 input[type=button],
-input[type=submit] {
+input[type=submit],
+.button {
 	background-color: white;
 	padding: 8px 10px;
 	border: 1px solid #ccc;
 	border-radius: 4px;
 	cursor: pointer;
+	text-decoration: none;
+	color: #333;
 }
 
 input[type=button]:hover,
 input[type=submit]:hover,
 input[type=button]:focus,
-input[type=submit]:focus {
-	background-color: #ddd;
-} {
+input[type=submit]:focus,
+.button:hover,
+.button:focus {
 	background-color: #ddd;
 }
 
@@ -95,6 +98,7 @@ input[type=password]{
 	padding: 8px;
 	border: 1px solid #ccc;
 	border-radius: 4px;
+	margin-bottom: 10px;
 }
 
 input[type=text]:focus,
