@@ -74,10 +74,10 @@ if($action == "save") {
 	<body>
 		<form action="dynamic.php?action=save&path=<?php echo $path ?>&index=<?php echo $page->index ?>" method="POST">
 			<h1><?php echo $path ?></h1>
-			<input type="text" name="title" value="<?php echo $page->title ?>"><br>
-			<input type="text" name="template_path" value="<?php echo $page->template_path ?>"><br>
-			<textarea name="body" placeholder="The body of the file" style="height: 30em; width: 80%;"><?php echo $page->body ?></textarea><br>
-			Last edited: <?php echo $page->date ?><br>
+			<input type="text" name="title" value="<?php echo htmlspecialchars($page->title) ?>"><br>
+			<input type="text" name="template_path" value="<?php echo htmlspecialchars($page->template_path) ?>"><br>
+			<textarea name="body" placeholder="The body of the file" style="height: 30em; width: 80%;"><?php echo htmlspecialchars($page->body) ?></textarea><br>
+			Last edited: <?php echo htmlspecialchars($page->date) ?><br>
 			<input type="submit" value="Save">
 			<a href="dynamic.php?path=<?php echo $path ?>&index=<?php echo $page->index ?>">Cancel</a>
 			<a href="files.php?path=<?php echo dirname($path) ?>">Back</a>

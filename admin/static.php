@@ -21,7 +21,7 @@ if($action == "save") {
 	<body>
 		<h1><?php echo basename($path) ?></h1>
 		<form action="static.php?action=save&path=<?php echo $path ?>" method="POST">
-			<textarea name="contents" placeholder="The contents of the file" style="height: 30em; width: 80%;"><?php echo $contents ?></textarea><br>
+			<textarea name="contents" placeholder="The contents of the file" style="height: 30em; width: 80%;"><?php echo htmlspecialchars($contents) ?></textarea><br>
 			<input type="submit" value="Save">
 			<a href="static.php?path=<?php echo $path ?>">Cancel</a>
 			<a href="files.php?path=<?php echo dirname($path) ?>">Back</a>
