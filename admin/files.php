@@ -110,6 +110,7 @@ else if($action == "rename") {
 		<div class="body-container">
 			<h1>Index of <?php echo $path ?></h1>
 			<a href="index.php">Back</a><br>
+			<a href="upload.php?path=<?php echo $path ?>">Upload Files</a><br>
 			<form action="files.php?action=newdir&path=<?php echo $path ?>" method="POST">
 				<input type="text" name="name">
 				<input type="submit" value="Create Directory">
