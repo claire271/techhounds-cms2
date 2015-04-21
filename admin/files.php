@@ -1,8 +1,6 @@
 <?php
 require("util.php");
 
-define("ROOT_PATH",cleanPath($_SERVER['DOCUMENT_ROOT']));
-
 $pages_table = Table::open("cms2-pages");
 if(!$pages_table) {
 	error_log("cms2-pages table is missing!");

@@ -1,8 +1,6 @@
 <?php
 require("util.php");
 
-define("ROOT_PATH",cleanPath($_SERVER['DOCUMENT_ROOT']));
-
 $path = cleanPath($_GET['path']);
 
 $pages_table = Table::open("cms2-pages");
@@ -10,44 +8,6 @@ if(!$pages_table) {
 	error_log("cms2-pages table is missing!");
 }
 $page = $pages_table->getRow($_GET["index"]);
-
-function template_replace($input,$page) {
-	if(strlen($input) > strlen("file:") && substr($input,0,strlen("file:")) == "file:") {
-		return file_get_contents(cleanPath(ROOT_PATH . trim(substr($input,strlen("file:")))));
-	}
-	else {
-		return $page->$input;
-	}
-}
-
-function template_match($input,$callback,$page,$level = 8) {
-	if($level <= 0) {
-		return $input;
-	}
-
-	$openIndex = -1;
-	$closeIndex = -1;
-	for($i = 1;$i < strlen($input) - 1;$i++) {
-		if($input[$i - 1] == "{" && $input[$i] == "{") {
-			$openIndex = $i + 1;
-		}
-		if($input[$i] == "}" && $input[$i + 1] == "}") {
-			$closeIndex = $i - 1;
-
-			//Process this match
-			if($openIndex >= 0 && $closeIndex >= 0) {
-				$replacement = $callback(substr($input,$openIndex,$closeIndex - $openIndex + 1),$page);
-				$input = substr($input,0,$openIndex - 2) . $replacement . substr($input,$closeIndex + 3);
-			}
-
-			//Clean up for next match
-			$openIndex = -1;
-			$closeIndex = -1;
-		}
-	}
-
-	return template_match($input,$callback,$page,$level - 1);
-}
 
 if($action == "save") {
 	$page->title = $_POST["title"];
@@ -62,8 +22,9 @@ if($action == "save") {
 	$output = template_match($template,"template_replace",$page);
 
 	file_put_contents(ROOT_PATH . $path,$output);
+	chmod(ROOT_PATH . $path,0664);
 	
-	//header( "Location: dynamic.php?path=" . $path . "&index=" . $page->index);
+	header( "Location: dynamic.php?path=" . $path . "&index=" . $page->index);
 }
 
 ?>

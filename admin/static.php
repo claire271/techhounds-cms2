@@ -1,8 +1,6 @@
 <?php
 require("util.php");
 
-define("ROOT_PATH",cleanPath($_SERVER['DOCUMENT_ROOT']));
-
 $path = cleanPath($_GET['path']);
 $file_path = ROOT_PATH . $path;
 

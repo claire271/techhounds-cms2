@@ -27,6 +27,30 @@ if(!isset($_SESSION["username"])) {
 	header( "Location: login.php?action=fail" );
 }
 
+$pages_table = Table::open("cms2-pages");
+if(!$pages_table) {
+	error_log("cms2-pages table is missing!");
+}
+$pages = $pages_table->getRows();
+
+if($action == "purge") {
+	foreach($pages as $page) {
+		unlink(ROOT_PATH . $page->out_path);
+	}
+	header( "Location: index.php" );
+}
+
+if($action == "regenerate") {
+	foreach($pages as $page) {
+		$template = file_get_contents(cleanPath(ROOT_PATH . $page->template_path));
+		$output = template_match($template,"template_replace",$page);
+		
+		file_put_contents(ROOT_PATH . $page->out_path,$output);
+		chmod(ROOT_PATH . $page->out_path,0664);
+	}
+	header( "Location: index.php" );
+}
+
 ?>
 <html>
 	<head>
@@ -40,6 +64,8 @@ if(!isset($_SESSION["username"])) {
 			<a href="login.php?action=logout">Logout</a><br>
 			<a href="users.php">Users</a><br>
 			<a href="files.php">File Explorer</a><br>
+			<a href="index.php?action=purge">Purge All Files</a><br>
+			<a href="index.php?action=regenerate">Regenerate All Files</a><br>
 		</div>
 	</body>
 </html>
