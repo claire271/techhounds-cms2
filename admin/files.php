@@ -27,7 +27,7 @@ for($i = 0;$i < count($files);$i++) {
 foreach($pages as $page) {
 	$match = false;
 	foreach($files as $file) {
-		if(basename($page->out_path) == $file->name) {
+		if(cleanPath($page->out_path) == cleanPath($file_path . "/" . $file->name)) {
 			$match = true;
 			$file->flag = "dynamic";
 			$file->index = $page->index;
