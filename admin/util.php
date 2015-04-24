@@ -29,6 +29,17 @@ function template_replace($input,$page) {
 	if(strlen($input) > strlen("file:") && substr($input,0,strlen("file:")) == "file:") {
 		return file_get_contents(cleanPath(ROOT_PATH . trim(substr($input,strlen("file:")))));
 	}
+	else if(strlen($input) > strlen("param:") && substr($input,0,strlen("param:")) == "param:") {
+		$params = explode("\n",$page->params);
+		foreach($params as $param) {
+			$param = trim($param,"\r\n");
+			$name = strstr($param," ",true);
+			$repl = substr(strstr($param," "),1);
+			if($name == substr($input,strlen("param:"))) {
+				return $repl;
+			}
+		}
+	}
 	else {
 		return $page->$input;
 	}

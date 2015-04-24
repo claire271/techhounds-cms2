@@ -10,7 +10,7 @@ if(!$pages_table) {
 $page = $pages_table->getRow($_GET["index"]);
 
 if($action == "save") {
-	$page->title = $_POST["title"];
+	$page->params = $_POST["params"];
 	$page->template_path = $_POST["template_path"];
 	$page->body = $_POST["body"];
 	date_default_timezone_set("America/Indiana/Indianapolis");
@@ -35,9 +35,9 @@ if($action == "save") {
 	<body>
 		<form action="dynamic.php?action=save&path=<?php echo $path ?>&index=<?php echo $page->index ?>" method="POST">
 			<h1><?php echo $path ?></h1>
-			<input type="text" name="title" placeholder="Title" value="<?php echo htmlspecialchars($page->title) ?>"><br>
 			<input type="text" name="template_path" placeholder="Template Path" value="<?php echo htmlspecialchars($page->template_path) ?>"><br>
 			<textarea name="body" placeholder="The body of the file" style="height: 30em; width: 80%;"><?php echo htmlspecialchars($page->body) ?></textarea><br>
+			<textarea name="params" placeholder="The parameters of the file" style="height: 30em; width: 80%;"><?php echo htmlspecialchars($page->params) ?></textarea><br>
 			Last edited: <?php echo htmlspecialchars($page->date) ?><br>
 			<input type="submit" value="Save">
 			<a href="dynamic.php?path=<?php echo $path ?>&index=<?php echo $page->index ?>">Cancel</a>
