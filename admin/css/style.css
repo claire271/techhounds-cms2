@@ -125,3 +125,30 @@ input[type=text]:focus,
 input[type=password]:focus {
 	border-color: #aaa;
 }
+
+/*
+  Table Stuff
+*/
+
+table {
+	width: 100%;
+	max-width: 100%;
+	border-spacing: 0;
+}
+
+th, td {
+	padding: 5px;
+}
+
+th {
+	text-align: left;
+}
+
+td {
+	border-top: 1px solid #ccc;
+	padding
+}
+
+td.delete {
+	width: 10px;
+}

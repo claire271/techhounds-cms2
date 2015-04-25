@@ -107,30 +107,58 @@ else if($action == "rename") {
 	<body>
 		<div class="body-container">
 			<h1>Index of <?php echo $path ?></h1>
-			<div class="column col-75">			
-				<?php
-				foreach($files as $file) {
-					$new_path = cleanPath($path . "/" . $file->name);
-					if($file->flag == "dir") {
-				?>
-					<a href="files.php?action=delete&type=dir&path=<?php echo $path ?>&name=<?php echo $file->name ?>" style="color:#0F0F0F">x</a>
-					<a href="files.php?path=<?php echo $new_path ?>" style="color:#0000FF"><?php echo $file->name ?></a><br>
-				<?php
-				}
-				else if($file->flag == "static") {
-				?>
-					<a href="files.php?action=delete&type=static&path=<?php echo $path ?>&name=<?php echo $file->name ?>" style="color:#0F0F0F">x</a>
-					<a href="static.php?path=<?php echo $new_path ?>" style="color:#FF0000"><?php echo $file->name ?></a><br>
-				<?php
-				}
-				else if($file->flag == "dynamic") {
-				?>
-					<a href="files.php?action=delete&type=dynamic&path=<?php echo $path ?>&name=<?php echo $file->name ?>&index=<?php echo $file->index ?>" style="color:#0F0F0F">x</a>
-					<a href="dynamic.php?path=<?php echo $new_path ?>&index=<?php echo $file->index ?>" style="color:#FF00FF"><?php echo $file->name ?></a><br>
-				<?php
-				}
-				}
-				?>
+			<div class="column col-75">
+				<table>
+					<thead>
+						<tr>
+							<th></th>
+							<th>File Name</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php
+						foreach($files as $file) {
+							$new_path = cleanPath($path . "/" . $file->name);
+							if($file->flag == "dir") {
+						?>
+							<tr style="background-color: #F7F7F7">
+								<td class="delete">
+									<a href="files.php?action=delete&type=dir&path=<?php echo $path ?>&name=<?php echo $file->name ?>" style="color:#0F0F0F">×</a>
+								</td>
+								<td>
+									<a href="files.php?path=<?php echo $new_path ?>" style="color:#0000FF"><?php echo $file->name ?></a><br>
+								</td>
+							</tr>
+						<?php
+						}
+						else if($file->flag == "static") {
+						?>
+							<tr>
+								<td class="delete">
+									<a href="files.php?action=delete&type=static&path=<?php echo $path ?>&name=<?php echo $file->name ?>" style="color:#0F0F0F">×</a>
+								</td>
+								<td>
+									<a href="static.php?path=<?php echo $new_path ?>" style="color:#FF0000"><?php echo $file->name ?></a><br>
+								</td>
+							</tr>
+						<?php
+						}
+						else if($file->flag == "dynamic") {
+						?>
+							<tr>
+								<td class="delete">
+									<a href="files.php?action=delete&type=dynamic&path=<?php echo $path ?>&name=<?php echo $file->name ?>&index=<?php echo $file->index ?>" style="color:#0F0F0F">×</a>
+								</td>
+								<td>
+									<a href="dynamic.php?path=<?php echo $new_path ?>&index=<?php echo $file->index ?>" style="color:#FF00FF"><?php echo $file->name ?></a><br>
+								</td>
+							</tr>
+						<?php
+						}
+						}
+						?>
+						</tbody>
+				</table>
 				<a href="upload.php?path=<?php echo $path ?>">Upload Files</a>
 			</div>
 			<div class="column col-25">
