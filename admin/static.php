@@ -15,14 +15,17 @@ if($action == "save") {
 <html>
 	<head>
 		<title>Static Editor</title>
+		<link rel="stylesheet" type="text/css" href="css/style.css">
 	</head>
 	<body>
-		<h1><?php echo basename($path) ?></h1>
-		<form action="static.php?action=save&path=<?php echo $path ?>" method="POST">
-			<textarea name="contents" placeholder="The contents of the file" style="height: 30em; width: 80%;"><?php echo htmlspecialchars($contents) ?></textarea><br>
-			<input type="submit" value="Save">
-			<a href="static.php?path=<?php echo $path ?>">Cancel</a>
-			<a href="files.php?path=<?php echo dirname($path) ?>">Back</a>
-		</form>
+		<div class="body-container">
+			<h1><?php echo basename($path) ?></h1>
+			<form action="static.php?action=save&path=<?php echo $path ?>" method="POST">
+				<textarea name="contents" placeholder="The contents of the file" style="height: 30em; width: 80%;"><?php echo htmlspecialchars($contents) ?></textarea><br>
+				<input type="submit" value="Save">
+				<a class="button" href="static.php?path=<?php echo $path ?>">Cancel</a>
+				<a class="button" href="files.php?path=<?php echo dirname($path) ?>">Back</a>
+			</form>
+		</div>
 	</body>
 </html>

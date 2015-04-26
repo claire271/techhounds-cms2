@@ -31,17 +31,20 @@ if($action == "save") {
 <html>
 	<head>
 		<title>Dynamic Editor</title>
+		<link rel="stylesheet" type="text/css" href="css/style.css">
 	</head>
 	<body>
-		<form action="dynamic.php?action=save&path=<?php echo $path ?>&index=<?php echo $page->index ?>" method="POST">
-			<h1><?php echo $path ?></h1>
-			<input type="text" name="template_path" placeholder="Template Path" value="<?php echo htmlspecialchars($page->template_path) ?>"><br>
-			<textarea name="body" placeholder="The body of the file" style="height: 30em; width: 80%;"><?php echo htmlspecialchars($page->body) ?></textarea><br>
-			<textarea name="params" placeholder="The parameters of the file" style="height: 30em; width: 80%;"><?php echo htmlspecialchars($page->params) ?></textarea><br>
-			Last edited: <?php echo htmlspecialchars($page->date) ?><br>
-			<input type="submit" value="Save">
-			<a href="dynamic.php?path=<?php echo $path ?>&index=<?php echo $page->index ?>">Cancel</a>
-			<a href="files.php?path=<?php echo dirname($path) ?>">Back</a>
-		</form>
+		<div class="body-container">
+			<form action="dynamic.php?action=save&path=<?php echo $path ?>&index=<?php echo $page->index ?>" method="POST">
+				<h1><?php echo $path ?></h1>
+				<input type="text" name="template_path" placeholder="Template Path" value="<?php echo htmlspecialchars($page->template_path) ?>"><br>
+				<textarea name="body" placeholder="The body of the file" style="height: 30em; width: 80%;"><?php echo htmlspecialchars($page->body) ?></textarea><br>
+				<textarea name="params" placeholder="The parameters of the file" style="height: 30em; width: 80%;"><?php echo htmlspecialchars($page->params) ?></textarea><br>
+				Last edited: <?php echo htmlspecialchars($page->date) ?><br>
+				<input type="submit" value="Save">
+				<a class="button" href="dynamic.php?path=<?php echo $path ?>&index=<?php echo $page->index ?>">Cancel</a>
+				<a class="button" href="files.php?path=<?php echo dirname($path) ?>">Back</a>
+			</form>
+		</div>
 	</body>
 </html>

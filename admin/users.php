@@ -54,18 +54,33 @@ if(!$users) {
 			}
 			else {
 			  $rows = $users->getRows();
-			foreach($rows as $row) {
 			?>
-			<?php echo $row->index ?>. <a href="users.php?action=view&index=<?php echo $row->index ?>"><?php echo $row->name ?></a><br>
+				<table>
+					<thead>
+						<tr>
+							<th>#</th>
+							<th>Username</th>
+						</tr>
+					</thead>
+					<tbody>
+						<?php
+						foreach($rows as $row) {
+							?>
+							<tr>
+								<th scope="row"><?php echo $row->index ?></td>
+								<td><a href="users.php?action=view&index=<?php echo $row->index ?>"><?php echo $row->name ?></a></td>
+							</tr>
+						<?php } ?>
+					</tbody>
+				</table>
 			<?php
-			  }
 			}
 			?>
 			<br>
 			<?php
 			if(!($action == "view" || $action == "add")){ ?>
-			<a href="users.php?action=add">Add User</a>
-			<a href="index.php">Admin Home</a>
+			<a class="button" href="users.php?action=add">Add User</a>
+			<a class="button" href="index.php">Back</a>
 			<?php 
 			}
 			?>

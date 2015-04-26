@@ -159,7 +159,8 @@ else if($action == "rename") {
 						?>
 						</tbody>
 				</table>
-				<a href="upload.php?path=<?php echo $path ?>">Upload Files</a>
+				<br>
+				<a class="button" href="upload.php?path=<?php echo $path ?>">Upload Files</a>
 			</div>
 			<div class="column col-25">
 				<form action="files.php?action=newdir&path=<?php echo $path ?>" method="POST">
@@ -180,7 +181,7 @@ else if($action == "rename") {
 					<input type="submit" value="Rename File">
 				</form>
 			</div>
-				<a href="index.php">Back</a><br>
+			<a class="button" href="index.php">Back</a><br>
 		</div>
 	</body>
 </html>
