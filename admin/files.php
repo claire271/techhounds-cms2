@@ -26,19 +26,21 @@ for($i = 0;$i < count($files);$i++) {
 
 foreach($pages as $page) {
 	$match = false;
-	foreach($files as $file) {
-		if(cleanPath($page->out_path) == cleanPath($file_path . "/" . $file->name)) {
-			$match = true;
+	if(cleanPath(dirname($page->out_path)) == cleanPath($path)) {
+		foreach($files as $file) {
+			if(basename($page->out_path) == $file->name) {
+				$match = true;
+				$file->flag = "dynamic";
+				$file->index = $page->index;
+			}
+		}
+		if(!$match) {
+			$file = new stdClass();
+			$file->name = basename($page->out_path);
 			$file->flag = "dynamic";
 			$file->index = $page->index;
+			array_push($files,$file);
 		}
-	}
-	if(!$match && cleanPath(dirname($page->out_path)) == cleanPath($path)) {
-		$file = new stdClass();
-		$file->name = basename($page->out_path);
-		$file->flag = "dynamic";
-		$file->index = $page->index;
-		array_push($files,$file);
 	}
 }
 
