@@ -14,6 +14,7 @@ if($action == "save") {
 ?>
 <html>
 	<head>
+		<meta charset="utf-8">
 		<title>Static Editor</title>
 		<link rel="stylesheet" type="text/css" href="css/style.css">
 	</head>

@@ -30,6 +30,7 @@ if($action == "save") {
 ?>
 <html>
 	<head>
+		<meta charset="utf-8">
 		<title>Dynamic Editor</title>
 		<link rel="stylesheet" type="text/css" href="css/style.css">
 	</head>

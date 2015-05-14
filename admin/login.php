@@ -4,6 +4,7 @@ require("util.php");
 ?>
 <html>
 	<head>
+		<meta charset="utf-8">
 		<title>Admin Login</title>
 		<link rel="stylesheet" type="text/css" href="css/style.css">
 	</head>
