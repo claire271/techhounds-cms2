@@ -16,6 +16,7 @@ for($i = 0;$i < count($_FILES["files"]["error"]);$i++) {
 ?>
 <html>
 	<head>
+		<meta charset="utf-8">
 		<title>Upload Files</title>
 		<link rel="stylesheet" type="text/css" href="css/style.css">
 	</head>

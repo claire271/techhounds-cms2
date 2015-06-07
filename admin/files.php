@@ -103,6 +103,7 @@ else if($action == "rename") {
 ?>
 <html>
 	<head>
+		<meta charset="utf-8">
 		<title>File Explorer</title>
 		<link rel="stylesheet" type="text/css" href="css/style.css">
 	</head>
