@@ -22,7 +22,7 @@ if($action == "save") {
 		<div class="body-container">
 			<h1><?php echo basename($path) ?></h1>
 			<form action="static.php?action=save&path=<?php echo $path ?>" method="POST">
-				<textarea name="contents" placeholder="The contents of the file" style="height: 30em; width: 80%;"><?php echo htmlspecialchars($contents) ?></textarea><br>
+				<textarea name="contents" data-editor="<?php echo pathinfo($path,PATHINFO_EXTENSION) ?>" placeholder="The contents of the file" style="height: 30em; width: 80%;"><?php echo htmlspecialchars($contents) ?></textarea><br>
 				<input type="submit" value="Save">
 				<a class="button" href="static.php?path=<?php echo $path ?>">Cancel</a>
 				<a class="button" href="files.php?path=<?php echo dirname($path) ?>">Back</a>
@@ -30,6 +30,7 @@ if($action == "save") {
 		</div>
 	</body>
 	<script src="/ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/jquery-1.11.3.js" type="text/javascript" charset="utf-8"></script>
 	<script>
 	//Ace stuff
 	$(function () {
@@ -51,8 +52,11 @@ if($action == "save") {
 			var editor = ace.edit(editDiv[0]);
 			//editor.renderer.setShowGutter(false);
 			editor.getSession().setValue(textarea.val());
+
+			if(mode == "js") mode = "javascript";
+
 			editor.getSession().setMode("ace/mode/" + mode);
-			editor.setKeyboardHandler("ace/keyboard/ace");
+			//editor.setKeyboardHandler("ace/keyboard/emacs");
 			editor.setTheme("ace/theme/idle_fingers");
 			
 			test = editor;
