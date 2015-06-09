@@ -1,10 +1,10 @@
 <?php
 //Utility functions and declarations first
 define("ROOT_PATH",cleanPath($_SERVER['DOCUMENT_ROOT']));
-define("ADMIN_DIR","/admin");
+define("ADMIN_DIR",cleanPath(__DIR__));
 
 ini_set("log_errors", 1);
-ini_set("error_log", cleanPath(ROOT_PATH . ADMIN_DIR . "/error.log"));
+ini_set("error_log", cleanPath(ADMIN_DIR . "/error.log"));
 
 //Always returns with no trailing slash
 function cleanPath($path) {
@@ -81,9 +81,9 @@ function template_match($input,$callback,$page,$level = 8) {
 	return template_match($input,$callback,$page,$level - 1);
 }
 
-require(cleanPath($_SERVER['DOCUMENT_ROOT'] . "/db/db.php"));
+require(cleanPath(ROOT_PATH . "/db/db.php"));
 
-session_save_path(cleanPath($_SERVER['DOCUMENT_ROOT'] . "/" . ADMIN_DIR . "/session"));
+session_save_path(cleanPath(ADMIN_DIR . "/session"));
 session_start();
 
 //Only for login/logout page
