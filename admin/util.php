@@ -3,6 +3,9 @@
 define("ROOT_PATH",cleanPath($_SERVER['DOCUMENT_ROOT']));
 define("ADMIN_DIR","/admin");
 
+ini_set("log_errors", 1);
+ini_set("error_log", cleanPath(ROOT_PATH . ADMIN_DIR . "/error.log"));
+
 //Always returns with no trailing slash
 function cleanPath($path) {
 	$path = str_replace("\\","/",$path);
@@ -34,7 +37,9 @@ function template_replace($input,$page) {
 		$params = explode("\n",$page->params);
 		foreach($params as $param) {
 			$param = trim($param,"\r\n");
-			$name = strstr($param," ",true);
+			$pos = strpos($param," ");
+			$name = substr($param,0,$pos);
+			//$name = strstr($param," ",true);
 			$repl = substr(strstr($param," "),1);
 			if($name == substr($input,strlen("param:"))) {
 				return $repl;
