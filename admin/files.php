@@ -183,8 +183,8 @@ else if($action == "rename") {
 					OUT: <input type="text" name="out" value="<?php echo $path ?>"><br/>
 					<input type="submit" value="Rename File">
 				</form>
+				<a class="button" href="index.php">Back</a>
 			</div>
-			<a class="button" href="index.php">Back</a><br>
 		</div>
 	</body>
 </html>
