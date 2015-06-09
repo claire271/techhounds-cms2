@@ -1,6 +1,7 @@
 <?php
 //Utility functions and declarations first
 define("ROOT_PATH",cleanPath($_SERVER['DOCUMENT_ROOT']));
+define("ADMIN_DIR","/admin");
 
 //Always returns with no trailing slash
 function cleanPath($path) {
@@ -77,7 +78,7 @@ function template_match($input,$callback,$page,$level = 8) {
 
 require(cleanPath($_SERVER['DOCUMENT_ROOT'] . "/db/db.php"));
 
-session_save_path(cleanPath($_SERVER['DOCUMENT_ROOT'] . "/admin/session"));
+session_save_path(cleanPath($_SERVER['DOCUMENT_ROOT'] . "/" . ADMIN_DIR . "/session"));
 session_start();
 
 //Only for login/logout page
