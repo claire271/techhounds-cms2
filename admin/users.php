@@ -43,7 +43,15 @@ if(!$users) {
 		        $row = $users->createRow();
 		      }
 		      $row->name = $_POST["username"];
-    		  $row->hash = hash("md5", $_POST["password"]);
+
+    		  //$row->hash = hash("md5", $_POST["password"]);
+
+			    $row->salt = hash("sha512",mt_rand());
+			    $row->hash = $row->salt . $_POST["password"];
+			    for($i = 0;$i < 100000;$i++) {
+				    $row->hash = hash("sha512",$row->hash);
+			    }
+
 	    	  $_SESSION["username"] = $row->name;
 		      $row->write();
 		

@@ -10,10 +10,14 @@ if(!$users) {
 //Login from the login page
 if($action == "login") {
 	$name = $_POST["username"];
-  $hash = hash("md5", $_POST["password"]);
+  //$hash = hash("md5", $_POST["password"]);
 	
 	$rows = $users->getRows();
 	foreach($rows as $row) {
+		$hash = $row->salt . $_POST["password"];
+		for($i = 0;$i < 100000;$i++) {
+			$hash = hash("sha512",$hash);
+		}
 		if($name == $row->name &&
 			 $hash == $row->hash) {
 			$_SESSION["username"] = $name;

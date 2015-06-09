@@ -8,10 +8,17 @@
 		
 		if(!Table::exists("cms2-users")) {
 			echo("cms2-users table is missing! Recreating now.<br/>");
-			$users = Table::create("cms2-users",array("name","hash"));
+			$users = Table::create("cms2-users",array("name","hash","salt"));
 			$admin = $users->createRow();
 			$admin->name = "admin";
-			$admin->hash = md5("password");
+
+    	//$admin->hash = hash("md5", "password");
+
+			$admin->salt = hash("sha512",mt_rand());
+			$admin->hash = $admin->salt . "password";
+			for($i = 0;$i < 100000;$i++) {
+				$admin->hash = hash("sha512",$admin->hash);
+			}
 			$admin->write();
 		}
 		if(!Table::exists("cms2-pages")) {
