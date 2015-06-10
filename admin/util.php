@@ -1,7 +1,7 @@
 <?php
 //Utility functions and declarations first
 define("ROOT_PATH",cleanPath($_SERVER['DOCUMENT_ROOT']));
-define("ADMIN_DIR",cleanPath(__DIR__));
+define("ADMIN_DIR",cleanPath(dirname(__FILE__)));
 
 ini_set("log_errors", 1);
 ini_set("error_log", cleanPath(ADMIN_DIR . "/error.log"));
