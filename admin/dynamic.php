@@ -75,10 +75,10 @@ $extension = pathinfo($path,PATHINFO_EXTENSION);
 			editor.getSession().setValue(textarea.val());
 
 			if(mode == "js") mode = "javascript";
-
+			if(mode == "csv") editor.getSession().setUseSoftTabs(false);
 			editor.getSession().setMode("ace/mode/" + mode);
 			//editor.setKeyboardHandler("ace/keyboard/emacs");
-			editor.setTheme("ace/theme/idle_fingers");
+			editor.setTheme("ace/theme/chrome");
 			
 			test = editor;
 			// copy back to textarea on form submit
