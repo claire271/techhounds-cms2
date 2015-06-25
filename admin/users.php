@@ -82,17 +82,13 @@ if(!$users) {
 						<?php } ?>
 					</tbody>
 				</table>
-			<?php
-			}
-			?>
+			<?php } ?>
 			<br>
 			<?php
 			if(!($action == "view" || $action == "add")){ ?>
 			<a class="button" href="users.php?action=add">Add User</a>
 			<a class="button" href="index.php">Back</a>
-			<?php 
-			}
-			?>
+			<?php }	?>
 		</div>
 	</body>
 </html>

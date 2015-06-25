@@ -21,6 +21,7 @@ if($action == "login") {
 		if($name == $row->name &&
 			 $hash == $row->hash) {
 			$_SESSION["username"] = $name;
+			$_SESSION["view"] = "simple";
 			header( "Location: index.php" );
 		}
 	}

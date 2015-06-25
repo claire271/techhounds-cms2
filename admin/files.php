@@ -1,10 +1,13 @@
 <?php
 require("util.php");
 
+$_SESSION["view"] = "simple";
+
 $pages_table = Table::open("cms2-pages");
 if(!$pages_table) {
 	error_log("cms2-pages table is missing!");
 }
+
 $pages = $pages_table->getRows();
 
 $path = isset( $_GET['path'] ) ? $_GET['path'] : "/";
@@ -111,58 +114,84 @@ else if($action == "rename") {
 		<div class="body-container">
 			<h1>Index of <?php echo $path ?></h1>
 			<div class="column col-75">
-				<table>
-					<thead>
-						<tr>
-							<th></th>
-							<th>File Name</th>
-						</tr>
-					</thead>
-					<tbody>
-						<?php
-						foreach($files as $file) {
-							$new_path = cleanPath($path . "/" . $file->name);
-							if($file->flag == "dir") {
-						?>
-							<tr style="background-color: #F7F7F7">
-								<td class="delete">
-									<a href="files.php?action=delete&type=dir&path=<?php echo $path ?>&name=<?php echo $file->name ?>" style="color:#0F0F0F">×</a>
-								</td>
-								<td>
-									<a href="files.php?path=<?php echo $new_path ?>" style="color:#0000FF"><?php echo $file->name ?></a><br>
-								</td>
-							</tr>
-						<?php
-						}
-						else if($file->flag == "static") {
-						?>
+				<?php if($_SESSION["view"] === "advanced") { ?>
+					<table>
+						<thead>
 							<tr>
-								<td class="delete">
-									<a href="files.php?action=delete&type=static&path=<?php echo $path ?>&name=<?php echo $file->name ?>" style="color:#0F0F0F">×</a>
-								</td>
-								<td>
-									<a href="static.php?path=<?php echo $new_path ?>" style="color:#FF0000"><?php echo $file->name ?></a><br>
-								</td>
+								<th></th>
+								<th>File Name</th>
 							</tr>
-						<?php
-						}
-						else if($file->flag == "dynamic") {
-						?>
-							<tr>
-								<td class="delete">
-									<a href="files.php?action=delete&type=dynamic&path=<?php echo $path ?>&name=<?php echo $file->name ?>&index=<?php echo $file->index ?>" style="color:#0F0F0F">×</a>
-								</td>
-								<td>
-									<a href="dynamic.php?path=<?php echo $new_path ?>&index=<?php echo $file->index ?>" style="color:#FF00FF"><?php echo $file->name ?></a><br>
-								</td>
-							</tr>
-						<?php
-						}
-						}
-						?>
+						</thead>
+						<tbody>
+							<?php
+							foreach($files as $file) {
+								$new_path = cleanPath($path . "/" . $file->name);
+								if($file->flag == "dir") {
+							?>
+								<tr style="background-color: #F7F7F7">
+									<td class="delete">
+										<a href="files.php?action=delete&type=dir&path=<?php echo $path ?>&name=<?php echo $file->name ?>" style="color:#0F0F0F">×</a>
+									</td>
+									<td>
+										<a href="files.php?path=<?php echo $new_path ?>" style="color:#0000FF"><?php echo $file->name ?></a><br>
+									</td>
+								</tr>
+							<?php
+							}
+							else if($file->flag == "static") {
+							?>
+								<tr>
+									<td class="delete">
+										<a href="files.php?action=delete&type=static&path=<?php echo $path ?>&name=<?php echo $file->name ?>" style="color:#0F0F0F">×</a>
+									</td>
+									<td>
+										<a href="static.php?path=<?php echo $new_path ?>" style="color:#FF0000"><?php echo $file->name ?></a><br>
+									</td>
+								</tr>
+							<?php
+							}
+							else if($file->flag == "dynamic") {
+							?>
+								<tr>
+									<td class="delete">
+										<a href="files.php?action=delete&type=dynamic&path=<?php echo $path ?>&name=<?php echo $file->name ?>&index=<?php echo $file->index ?>" style="color:#0F0F0F">×</a>
+									</td>
+									<td>
+										<a href="dynamic.php?path=<?php echo $new_path ?>&index=<?php echo $file->index ?>" style="color:#FF00FF"><?php echo $file->name ?></a><br>
+									</td>
+								</tr>
+							<?php
+							}
+							}
+							?>
 						</tbody>
-				</table>
-				<br>
+					</table>
+					<br>
+				<?php }
+				else {
+				?>
+					<table>
+						<thead>
+							<tr>
+								<th>Page</th>
+							</tr>
+						</thead>
+						<tbody>
+							<?php
+							foreach($files as $file) {
+								$new_path = cleanPath($path . "/" . $file->name);
+								if($file->flag == "dynamic") {
+							?>
+								<tr>
+									<td><a href="dynamic.php?path=<?php echo $new_path ?>&index=<?php echo $file->index ?>"><?php echo $file->name ?></td>
+								</tr>
+							<?php
+							}
+							}
+							?>
+						</tbody>
+					</table>
+				<?php } ?>
 				<a class="button" href="upload.php?path=<?php echo $path ?>">Upload Files</a>
 			</div>
 			<div class="column col-25">
