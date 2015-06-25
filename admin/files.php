@@ -112,7 +112,13 @@ else if($action == "rename") {
 	</head>
 	<body>
 		<div class="body-container">
+			<?php if($_SESSION["view"] === "advanced") { ?>
 			<h1>Index of <?php echo $path ?></h1>
+			<?php }
+			else {
+			?>
+			<h1>Pages</h1>
+			<?php } ?>
 			<div class="column col-75">
 				<?php if($_SESSION["view"] === "advanced") { ?>
 					<table>
@@ -173,7 +179,8 @@ else if($action == "rename") {
 					<table>
 						<thead>
 							<tr>
-								<th>Page</th>
+								<th></th>
+								<th>Name</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -183,7 +190,12 @@ else if($action == "rename") {
 								if($file->flag == "dynamic") {
 							?>
 								<tr>
-									<td><a href="dynamic.php?path=<?php echo $new_path ?>&index=<?php echo $file->index ?>"><?php echo $file->name ?></td>
+									<td class="delete">
+										<a href="files.php?action=delete&type=dynamic&path=<?php echo $path ?>&name=<?php echo $file->name ?>&index=<?php echo $file->index ?>" style="color:#0F0F0F">×</a>
+									</td>
+									<td>
+										<a href="dynamic.php?path=<?php echo $new_path ?>&index=<?php echo $file->index ?>"><?php echo $file->name ?>
+									</td>
 								</tr>
 							<?php
 							}
@@ -195,6 +207,7 @@ else if($action == "rename") {
 				<a class="button" href="upload.php?path=<?php echo $path ?>">Upload Files</a>
 			</div>
 			<div class="column col-25">
+				<?php if($_SESSION["view"] === "advanced") { ?>
 				<form action="files.php?action=newdir&path=<?php echo $path ?>" method="POST">
 					<input type="text" name="name">
 					<input type="submit" value="Create Directory">
@@ -212,6 +225,17 @@ else if($action == "rename") {
 					OUT: <input type="text" name="out" value="<?php echo $path ?>"><br/>
 					<input type="submit" value="Rename File">
 				</form>
+				<?php }
+				else { ?>
+				<form action="files.php?action=newstatic&path=/templates" method="POST">
+					<input type="text" name="name">
+					<input type="submit" value="New Template">
+				</form>
+				<form action="files.php?action=newdynamic&path=<?php echo $path ?>" method="POST"><!-- Have to change this line somehow -->
+					<input type="text" name="name">
+					<input type="submit" value="New Page">
+				</form>
+				<?php } ?>
 				<a class="button" href="index.php">Back</a>
 			</div>
 		</div>
