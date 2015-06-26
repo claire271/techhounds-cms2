@@ -60,25 +60,25 @@ if($action == "delete") {
 		}
 		$pages_table->deleteRow($_GET["index"]);
 	}
-	header( "Location: files.php?path=" . $path);
+	header( "Location: files.php?path=" . urlencode($path));
 }
 else if($action == "newdir") {
 	$real_path = cleanPath($file_path . "/" . $_POST["name"]);
 	mkdir($real_path);
 	chmod($real_path,0775);
-	header( "Location: files.php?path=" . $path);
+	header( "Location: files.php?path=" . urlencode($path));
 }
 else if($action == "newstatic") {
 	$real_path = cleanPath($file_path . "/" . $_POST["name"]);
 	touch($real_path);
 	chmod($real_path,0664);
-	header( "Location: files.php?path=" . $path);
+	header( "Location: files.php?path=" . urlencode($path));
 }
 else if($action == "newdynamic") {
 	$page = $pages_table->createRow();
 	$page->out_path = cleanPath($path . "/" . $_POST["name"]);
 	$page->write();
-	header( "Location: files.php?path=" . $path);
+	header( "Location: files.php?path=" . urlencode($path));
 }
 else if($action == "rename") {
 	$in = $_POST["in"];
@@ -97,7 +97,7 @@ else if($action == "rename") {
 			break;
 		}
 	}
-	header( "Location: files.php?path=" . $path);
+	header( "Location: files.php?path=" . urlencode($path));
 }
 
 ?>
@@ -126,10 +126,10 @@ else if($action == "rename") {
 						?>
 							<tr style="background-color: #F7F7F7">
 								<td class="delete">
-									<a href="files.php?action=delete&type=dir&path=<?php echo $path ?>&name=<?php echo $file->name ?>" style="color:#0F0F0F">×</a>
+									<a href="files.php?action=delete&type=dir&path=<?php echo urlencode($path) ?>&name=<?php echo urlencode($file->name) ?>" style="color:#0F0F0F">×</a>
 								</td>
 								<td>
-									<a href="files.php?path=<?php echo $new_path ?>" style="color:#0000FF"><?php echo $file->name ?></a><br>
+									<a href="files.php?path=<?php echo urlencode($new_path) ?>" style="color:#0000FF"><?php echo $file->name ?></a><br>
 								</td>
 							</tr>
 						<?php
@@ -138,10 +138,10 @@ else if($action == "rename") {
 						?>
 							<tr>
 								<td class="delete">
-									<a href="files.php?action=delete&type=static&path=<?php echo $path ?>&name=<?php echo $file->name ?>" style="color:#0F0F0F">×</a>
+									<a href="files.php?action=delete&type=static&path=<?php echo urlencode($path) ?>&name=<?php echo urlencode($file->name) ?>" style="color:#0F0F0F">×</a>
 								</td>
 								<td>
-									<a href="static.php?path=<?php echo $new_path ?>" style="color:#FF0000"><?php echo $file->name ?></a><br>
+									<a href="static.php?path=<?php echo urlencode($new_path) ?>" style="color:#FF0000"><?php echo $file->name ?></a><br>
 								</td>
 							</tr>
 						<?php
@@ -150,10 +150,10 @@ else if($action == "rename") {
 						?>
 							<tr>
 								<td class="delete">
-									<a href="files.php?action=delete&type=dynamic&path=<?php echo $path ?>&name=<?php echo $file->name ?>&index=<?php echo $file->index ?>" style="color:#0F0F0F">×</a>
+									<a href="files.php?action=delete&type=dynamic&path=<?php echo urlencode($path) ?>&name=<?php echo urlencode($file->name) ?>&index=<?php echo urlencode($file->index) ?>" style="color:#0F0F0F">×</a>
 								</td>
 								<td>
-									<a href="dynamic.php?path=<?php echo $new_path ?>&index=<?php echo $file->index ?>" style="color:#FF00FF"><?php echo $file->name ?></a><br>
+									<a href="dynamic.php?path=<?php echo urlencode($new_path) ?>&index=<?php echo urlencode($file->index) ?>" style="color:#FF00FF"><?php echo $file->name ?></a><br>
 								</td>
 							</tr>
 						<?php
@@ -163,22 +163,22 @@ else if($action == "rename") {
 						</tbody>
 				</table>
 				<br>
-				<a class="button" href="upload.php?path=<?php echo $path ?>">Upload Files</a>
+				<a class="button" href="upload.php?path=<?php echo urlencode($path) ?>">Upload Files</a>
 			</div>
 			<div class="column col-25">
-				<form action="files.php?action=newdir&path=<?php echo $path ?>" method="POST">
+				<form action="files.php?action=newdir&path=<?php echo urlencode($path) ?>" method="POST">
 					<input type="text" name="name">
 					<input type="submit" value="Create Directory">
 				</form>
-				<form action="files.php?action=newstatic&path=<?php echo $path ?>" method="POST">
+				<form action="files.php?action=newstatic&path=<?php echo urlencode($path) ?>" method="POST">
 					<input type="text" name="name">
 					<input type="submit" value="Create Static File">
 				</form>
-				<form action="files.php?action=newdynamic&path=<?php echo $path ?>" method="POST">
+				<form action="files.php?action=newdynamic&path=<?php echo urlencode($path) ?>" method="POST">
 					<input type="text" name="name">
 					<input type="submit" value="Create Dynamic File">
 				</form>
-				<form action="files.php?action=rename&path=<?php echo $path ?>" method="POST">
+				<form action="files.php?action=rename&path=<?php echo urlencode($path) ?>" method="POST">
 					IN: <input type="text" name="in" value="<?php echo $path ?>"><br/>
 					OUT: <input type="text" name="out" value="<?php echo $path ?>"><br/>
 					<input type="submit" value="Rename File">

@@ -23,8 +23,8 @@ for($i = 0;$i < count($_FILES["files"]["error"]);$i++) {
 	<body>
 		<div class="body-container">
 			<h1>File Upload: <?php echo $path ?></h1>
-			<a href="files.php?path=<?php echo $path ?>">Back</a><br>
-			<form action="upload.php?path=<?php echo $path ?>" method="POST" enctype="multipart/form-data">
+			<a href="files.php?path=<?php echo urlencode($path) ?>">Back</a><br>
+			<form action="upload.php?path=<?php echo urlencode($path) ?>" method="POST" enctype="multipart/form-data">
 				<input name="files[]" type="file" multiple="true"/><br />
 				<input type="submit" value="Send files" />
 			</form>
