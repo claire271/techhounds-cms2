@@ -1,8 +1,6 @@
 <?php
 require("util.php");
 
-$_SESSION["view"] = "simple";
-
 $pages_table = Table::open("cms2-pages");
 if(!$pages_table) {
 	error_log("cms2-pages table is missing!");
@@ -102,6 +100,17 @@ else if($action == "rename") {
 	}
 	header( "Location: files.php?path=" . $path);
 }
+else if($action == "switchview") {
+	$view = isset($_POST["view"]) && $_POST["view"]  ? "simple" : "advanced";
+	
+	if($view == "simple"){
+		$_SESSION["view"] = "simple";
+	}
+	else {
+		$_SESSION["view"] = "advanced";
+	}
+	header( "Location: files.php?path=/" );
+}
 
 ?>
 <html>
@@ -112,7 +121,8 @@ else if($action == "rename") {
 	</head>
 	<body>
 		<div class="body-container">
-			<?php if($_SESSION["view"] === "advanced") { ?>
+			<?php echo $_SESSION["view"];
+			if($_SESSION["view"] === "advanced") { ?>
 			<h1>Index of <?php echo $path ?></h1>
 			<?php }
 			else {
@@ -236,6 +246,10 @@ else if($action == "rename") {
 					<input type="submit" value="New Page">
 				</form>
 				<?php } ?>
+				<form action="files.php?action=switchview" method="POST" id="theForm">
+					<input type="checkbox" name="view" value="simple"></input>Simple View
+					<input type="submit" value="Submit">
+				</form>
 				<a class="button" href="index.php">Back</a>
 			</div>
 		</div>
