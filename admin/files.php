@@ -121,8 +121,7 @@ else if($action == "switchview") {
 	</head>
 	<body>
 		<div class="body-container">
-			<?php echo $_SESSION["view"];
-			if($_SESSION["view"] === "advanced") { ?>
+			<?php if($_SESSION["view"] === "advanced") { ?>
 			<h1>Index of <?php echo $path ?></h1>
 			<?php }
 			else {
@@ -247,9 +246,20 @@ else if($action == "switchview") {
 				</form>
 				<?php } ?>
 				<form action="files.php?action=switchview" method="POST" id="theForm">
-					<input type="checkbox" name="view" value="simple"></input>Simple View
-					<input type="submit" value="Submit">
+					<input type="checkbox" name="view" id="viewInput"value="simple" onclick="form.submit()"></input>Simple View
 				</form>
+				<script>
+				window.onload = function() {
+
+					var input = document.getElementById("viewInput");
+					if("<?php echo $_SESSION["view"]?>" === "simple"){
+						input.checked = true;
+					}
+					else {
+						input.checked = false;
+					}
+				}
+				</script>
 				<a class="button" href="index.php">Back</a>
 			</div>
 		</div>
