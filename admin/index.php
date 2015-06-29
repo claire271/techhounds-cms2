@@ -10,7 +10,7 @@ if(!$users) {
 //Login from the login page
 if($action == "login") {
 	$name = $_POST["username"];
-  //$hash = hash("md5", $_POST["password"]);
+	//$hash = hash("md5", $_POST["password"]);
 	
 	$rows = $users->getRows();
 	foreach($rows as $row) {
@@ -55,6 +55,48 @@ if($action == "regenerate") {
 	header( "Location: index.php" );
 }
 
+function hash_files($dirname,$zip) {
+	//echo "Entering dir: " . $dirname . "<br>";
+	$zip->addEmptyDir(substr($dirname,1));
+	$dir = dir(cleanPath(ROOT_PATH . $dirname));
+	while(false !== ($entry = $dir->read())) {
+		if($entry != "." && $entry != "..") {
+			$entry = cleanPath($dirname . "/" . $entry);
+			if(is_dir(cleanPath(ROOT_PATH . $entry))) {
+				hash_files($entry,$zip);
+			}
+			else {
+				$time = filemtime(cleanPath(ROOT_PATH . "/" . $entry));
+				$hash = md5(file_get_contents(cleanPath(ROOT_PATH . "/" . $entry)));
+				//echo $entry . ":" . $time . ":" . $hash . "<br>";
+				$zip->addFromString(substr($entry,1),$time . "\n" . $hash);
+			}
+		}
+	}
+}
+
+if($action == "hash") {
+	unlink(cleanPath(ADMIN_DIR . "/tmp/hash.zip"));
+	$zip = new ZipArchive();
+	$zip->open(cleanPath(ADMIN_DIR . "/tmp/hash.zip"),ZipArchive::CREATE);
+
+	hash_files("/",$zip);
+
+	$zip->close();
+	chmod(cleanPath(ADMIN_DIR . "/tmp/hash.zip"),0664);
+
+	header('Content-Description: File Transfer');
+    header('Content-Type: application/octet-stream');
+    header('Content-Disposition: attachment; filename=hash.zip');
+    header('Expires: 0');
+    header('Cache-Control: must-revalidate');
+    header('Pragma: public');
+    header('Content-Length: ' . filesize(cleanPath(ADMIN_DIR . "/tmp/hash.zip")));
+    readfile(cleanPath(ADMIN_DIR . "/tmp/hash.zip"));
+
+	//echo ADMIN_DIR;
+}
+
 ?>
 <html>
 	<head>
@@ -71,6 +113,9 @@ if($action == "regenerate") {
 			<a href="files.php">File Explorer</a><br>
 			<a href="index.php?action=purge">Purge All Files</a><br>
 			<a href="index.php?action=regenerate">Regenerate All Files</a><br>
+			<a href="index.php?action=hash">Generate File Hashes</a><br>
+			<a href="index.php?action=backup">Generate Backup</a><br>
+			<a href="index.php?action=restore">Restore Backup</a><br>
 		</div>
 	</body>
 </html>
