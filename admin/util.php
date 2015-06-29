@@ -98,4 +98,3 @@ else if(!defined("MAIN") && !isset($_SESSION["username"])) {
 $action = isset( $_GET['action'] ) ? $_GET['action'] : "";
 
 ?>
-
