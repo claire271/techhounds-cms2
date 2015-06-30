@@ -206,7 +206,7 @@ if($action == "restore") {
 	}
 
 	$zip->close();
-	//header( "Location: index.php" );
+	header( "Location: index.php" );
 }
 
 ?>
