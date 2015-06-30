@@ -193,15 +193,16 @@ if($action == "restore") {
 	$zip = new ZipArchive();
 	$zip->open(cleanPath(ADMIN_DIR . "/tmp/backup.zip"));
 
-	$zip->extractTo(ROOT_PATH);
-
 	for($i = 0;$i < $zip->numFiles;$i++) {
-		$filename = cleanPath(ROOT_PATH . "/" . $zip->getNameIndex($i));
-		if(is_dir($filename)) {
-			chmod($filename,0775);
+		$filename = $zip->getNameIndex($i);
+		$filepath = cleanPath(ROOT_PATH . "/" . $zip->getNameIndex($i));
+		if(substr($filename,-1) == "/") {
+			mkdir($filepath);
+			chmod($filepath,0775);
 		}
 		else {
-			chmod($filename,0664);
+			file_put_contents($filepath,$zip->getFromIndex($i));
+			chmod($filepath,0664);
 		}
 	}
 
