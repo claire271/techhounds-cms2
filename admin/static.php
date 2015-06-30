@@ -2,7 +2,7 @@
 require("util.php");
 
 $path = cleanPath($_GET['path']);
-$file_path = ROOT_PATH . $path;
+$file_path = ROOT_DIR . $path;
 
 $contents = file_get_contents($file_path);
 

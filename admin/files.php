@@ -4,12 +4,13 @@ require("util.php");
 $pages_table = Table::open("cms2-pages");
 if(!$pages_table) {
 	error_log("cms2-pages table is missing!");
+	fatal_error();
 }
 $pages = $pages_table->getRows();
 
 $path = isset( $_GET['path'] ) ? $_GET['path'] : "/";
 $path = cleanPath($path);
-$file_path = ROOT_PATH . $path;
+$file_path = ROOT_DIR . $path;
 $files = scandir($file_path);
 
 for($i = 0;$i < count($files);$i++) {
@@ -86,10 +87,10 @@ else if($action == "rename") {
 	foreach($files as $file) {
 		if($file->name != ".." && $file->name != "." && $file->name == basename($in)) {
 			if($file->flag == "static" || $file->flag == "dir") {
-				rename(cleanPath(ROOT_PATH . $in),cleanPath(ROOT_PATH . $out));
+				rename(cleanPath(ROOT_DIR . $in),cleanPath(ROOT_DIR . $out));
 			}
 			else if($file->flag == "dynamic") {
-				rename(cleanPath(ROOT_PATH . $in),cleanPath(ROOT_PATH . $out));
+				rename(cleanPath(ROOT_DIR . $in),cleanPath(ROOT_DIR . $out));
 				$page = $pages_table->getRow($file->index);
 				$page->out_path = cleanPath($out);
 				$page->write();
@@ -162,8 +163,6 @@ else if($action == "rename") {
 						?>
 						</tbody>
 				</table>
-				<br>
-				<a class="button" href="upload.php?path=<?php echo urlencode($path) ?>">Upload Files</a>
 			</div>
 			<div class="column col-25">
 				<form action="files.php?action=newdir&path=<?php echo urlencode($path) ?>" method="POST">
@@ -183,6 +182,9 @@ else if($action == "rename") {
 					OUT: <input type="text" name="out" value="<?php echo $path ?>"><br/>
 					<input type="submit" value="Rename File">
 				</form>
+				<a class="button" href="upload.php?path=<?php echo urlencode($path) ?>">Upload Files</a>
+				<br>
+				<br>
 				<a class="button" href="index.php">Back</a>
 			</div>
 		</div>

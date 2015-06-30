@@ -12,7 +12,7 @@
 			$admin = $users->createRow();
 			$admin->name = "admin";
 
-    	//$admin->hash = hash("md5", "password");
+    		//$admin->hash = hash("md5", "password");
 
 			$admin->salt = hash("sha512",mt_rand());
 			$admin->hash = $admin->salt . "password";

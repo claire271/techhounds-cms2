@@ -4,6 +4,7 @@ require("util.php");
 $users = Table::open("cms2-users");
 if(!$users) {
 	error_log("cms2-users table is missing!");
+	fatal_error();
 }
 
 ?>

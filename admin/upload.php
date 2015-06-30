@@ -3,14 +3,14 @@ require("util.php");
 
 $path = isset( $_GET['path'] ) ? $_GET['path'] : "/";
 
-$uploads_dir = ROOT_PATH . $path;
+$uploads_dir = ROOT_DIR . $path;
 for($i = 0;$i < count($_FILES["files"]["error"]);$i++) {
-  if ($_FILES["files"]["error"][$i] == UPLOAD_ERR_OK) {
-    $tmp_name = $_FILES["files"]["tmp_name"][$i];
-    $name = $_FILES["files"]["name"][$i];
-    move_uploaded_file($tmp_name, "$uploads_dir/$name");
+	if($_FILES["files"]["error"][$i] == UPLOAD_ERR_OK) {
+		$tmp_name = $_FILES["files"]["tmp_name"][$i];
+		$name = $_FILES["files"]["name"][$i];
+		move_uploaded_file($tmp_name, "$uploads_dir/$name");
 		chmod("$uploads_dir/$name",0664);
-  }
+	}
 }
 
 ?>

@@ -5,6 +5,7 @@ require("util.php");
 $users = Table::open("cms2-users");
 if(!$users) {
 	error_log("cms2-users table is missing!");
+	fatal_error();
 }
 
 //Login from the login page
@@ -34,23 +35,24 @@ if(!isset($_SESSION["username"])) {
 $pages_table = Table::open("cms2-pages");
 if(!$pages_table) {
 	error_log("cms2-pages table is missing!");
+	fatal_error();
 }
 $pages = $pages_table->getRows();
 
 if($action == "purge") {
 	foreach($pages as $page) {
-		unlink(ROOT_PATH . $page->out_path);
+		unlink(cleanPath(ROOT_DIR . $page->out_path));
 	}
 	header( "Location: index.php" );
 }
 
 if($action == "regenerate") {
 	foreach($pages as $page) {
-		$template = file_get_contents(cleanPath(ROOT_PATH . $page->template_path));
+		$template = file_get_contents(cleanPath(ROOT_DIR . $page->template_path));
 		$output = template_match($template,"template_replace",$page);
 		
-		file_put_contents(ROOT_PATH . $page->out_path,$output);
-		chmod(ROOT_PATH . $page->out_path,0664);
+		file_put_contents(ROOT_DIR . $page->out_path,$output);
+		chmod(ROOT_DIR . $page->out_path,0664);
 	}
 	header( "Location: index.php" );
 }
@@ -58,17 +60,17 @@ if($action == "regenerate") {
 function hash_files($dirname,$zip) {
 	//echo "Entering dir: " . $dirname . "<br>";
 	$zip->addEmptyDir(substr($dirname,1));
-	$dir = dir(cleanPath(ROOT_PATH . $dirname));
+	$dir = dir(cleanPath(ROOT_DIR . $dirname));
 	while(false !== ($entry = $dir->read())) {
 		if($entry != "." && $entry != "..") {
 			$entry = cleanPath($dirname . "/" . $entry);
-			if(is_dir(cleanPath(ROOT_PATH . $entry))) {
+			if(is_dir(cleanPath(ROOT_DIR . $entry))) {
 				hash_files($entry,$zip);
 			}
 			else {
-				if(filesize(cleanPath(ROOT_PATH. "/" . $entry)) <= 16777216) {
-					$time = filemtime(cleanPath(ROOT_PATH . "/" . $entry));
-					$hash = md5(file_get_contents(cleanPath(ROOT_PATH . "/" . $entry)));
+				if(filesize(cleanPath(ROOT_DIR. "/" . $entry)) <= 16777216) {
+					$time = filemtime(cleanPath(ROOT_DIR . "/" . $entry));
+					$hash = md5(file_get_contents(cleanPath(ROOT_DIR . "/" . $entry)));
 					//echo $entry . ":" . $time . ":" . $hash . "<br>";
 					$zip->addFromString(substr($entry,1),$time . "\n" . $hash);
 				}
@@ -98,36 +100,36 @@ if($action == "hash") {
 }
 
 function backup_files($dirname,$hzip,$zip,$path) {
-	if(cleanPath(ROOT_PATH . $dirname) == cleanPath(ADMIN_DIR . "/tmp/")) {
+	if(cleanPath(ROOT_DIR . $dirname) == cleanPath(ADMIN_DIR . "/tmp/")) {
 		return;
 	}
-	if(cleanPath(ROOT_PATH . $dirname) == cleanPath(ADMIN_DIR . "/session/")) {
+	if(cleanPath(ROOT_DIR . $dirname) == cleanPath(ADMIN_DIR . "/session/")) {
 		return;
 	}
-	if(cleanPath(ROOT_PATH . $dirname) == cleanPath(ROOT_PATH . "/.git/")) {
+	if(cleanPath(ROOT_DIR . $dirname) == cleanPath(ROOT_DIR . "/.git/")) {
 		return;
 	}
-	if(cleanPath(ROOT_PATH . $dirname) == cleanPath(ROOT_PATH . "/ace-builds/")) {
+	if(cleanPath(ROOT_DIR . $dirname) == cleanPath(ROOT_DIR . "/ace-builds/")) {
 		return;
 	}
-	if(cleanPath(ROOT_PATH . $dirname) == cleanPath(ROOT_PATH . "/admin/")) {
+	if(cleanPath(ROOT_DIR . $dirname) == cleanPath(ROOT_DIR . "/admin/")) {
 		return;
 	}
 	//echo "Entering dir: " . $dirname . "<br>";
 	$zip->addEmptyDir(substr($dirname,1));
-	$dir = dir(cleanPath(ROOT_PATH . $dirname));
+	$dir = dir(cleanPath(ROOT_DIR . $dirname));
 	while(false !== ($entry = $dir->read())) {
 		if($entry != "." && $entry != "..") {
 			$entry = cleanPath($dirname . "/" . $entry);
-			if(is_dir(cleanPath(ROOT_PATH . $entry))) {
+			if(is_dir(cleanPath(ROOT_DIR . $entry))) {
 				backup_files($entry,$hzip,$zip,$path);
 			}
 			else {
-				if(filesize(cleanPath(ROOT_PATH. "/" . $entry)) <= 16777216) {
+				if(filesize(cleanPath(ROOT_DIR. "/" . $entry)) <= 16777216) {
 					$rcont = $hzip->getFromName(substr($entry,1));
 					if($rcont !== false) {
-						$time = filemtime(cleanPath(ROOT_PATH . "/" . $entry));
-						$hash = md5(file_get_contents(cleanPath(ROOT_PATH . "/" . $entry)));
+						$time = filemtime(cleanPath(ROOT_DIR . "/" . $entry));
+						$hash = md5(file_get_contents(cleanPath(ROOT_DIR . "/" . $entry)));
 						$rconts = explode("\n",$rcont);
 						$rtime = $rconts[0];
 						$rhash = $rconts[1];
@@ -138,7 +140,7 @@ function backup_files($dirname,$hzip,$zip,$path) {
 						}
 					}
 					if($rcont === false) {
-						$zip->addFile(cleanPath(ROOT_PATH . "/" . $entry),substr($entry,1));
+						$zip->addFile(cleanPath(ROOT_DIR . "/" . $entry),substr($entry,1));
 						
 						if(($zip->numFies % 256) == 0) {
 							$zip->close();
@@ -199,7 +201,7 @@ if($action == "restore") {
 
 	for($i = 0;$i < $zip->numFiles;$i++) {
 		$filename = $zip->getNameIndex($i);
-		$filepath = cleanPath(ROOT_PATH . "/" . $zip->getNameIndex($i));
+		$filepath = cleanPath(ROOT_DIR . "/" . $zip->getNameIndex($i));
 		if(substr($filename,-1) == "/") {
 			mkdir($filepath);
 			chmod($filepath,0775);
@@ -239,6 +241,7 @@ if($action == "restore") {
 				<input name="backup" type="file"/><br />
 				<input type="submit" value="Restore Backup"/>
 			</form>
+			<a href="error.php">View Errors</a><br>
 		</div>
 	</body>
 </html>

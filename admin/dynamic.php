@@ -19,7 +19,7 @@ if($action == "save") {
 	$page->write();
 
 	//Templating stuff time
-	if($page->templage_path != "") {
+	if($page->template_path != "") {
 		$template = file_get_contents(cleanPath(ROOT_DIR . $page->template_path));
 		$output = template_match($template,"template_replace",$page);
 	}
