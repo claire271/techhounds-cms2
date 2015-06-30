@@ -66,10 +66,12 @@ function hash_files($dirname,$zip) {
 				hash_files($entry,$zip);
 			}
 			else {
-				$time = filemtime(cleanPath(ROOT_PATH . "/" . $entry));
-				$hash = md5(file_get_contents(cleanPath(ROOT_PATH . "/" . $entry)));
-				//echo $entry . ":" . $time . ":" . $hash . "<br>";
-				$zip->addFromString(substr($entry,1),$time . "\n" . $hash);
+				if(filesize(cleanPath(ROOT_PATH. "/" . $entry)) <= 16777216) {
+					$time = filemtime(cleanPath(ROOT_PATH . "/" . $entry));
+					$hash = md5(file_get_contents(cleanPath(ROOT_PATH . "/" . $entry)));
+					//echo $entry . ":" . $time . ":" . $hash . "<br>";
+					$zip->addFromString(substr($entry,1),$time . "\n" . $hash);
+				}
 			}
 		}
 	}
@@ -121,28 +123,30 @@ function backup_files($dirname,$hzip,$zip,$path) {
 				backup_files($entry,$hzip,$zip,$path);
 			}
 			else {
-				$rcont = $hzip->getFromName(substr($entry,1));
-				if($rcont !== false) {
-					$time = filemtime(cleanPath(ROOT_PATH . "/" . $entry));
-					$hash = md5(file_get_contents(cleanPath(ROOT_PATH . "/" . $entry)));
-					$rconts = explode("\n",$rcont);
-					$rtime = $rconts[0];
-					$rhash = $rconts[1];
-
-					if($hash != $rhash &&
-					   $time > $rtime) {
-						$rcont = false;
+				if(filesize(cleanPath(ROOT_PATH. "/" . $entry)) <= 16777216) {
+					$rcont = $hzip->getFromName(substr($entry,1));
+					if($rcont !== false) {
+						$time = filemtime(cleanPath(ROOT_PATH . "/" . $entry));
+						$hash = md5(file_get_contents(cleanPath(ROOT_PATH . "/" . $entry)));
+						$rconts = explode("\n",$rcont);
+						$rtime = $rconts[0];
+						$rhash = $rconts[1];
+						
+						if($hash != $rhash &&
+						   $time > $rtime) {
+							$rcont = false;
+						}
 					}
-				}
-				if($rcont === false) {
-					$zip->addFile(cleanPath(ROOT_PATH . "/" . $entry),substr($entry,1));
-
-					if(($zip->numFies % 256) == 0) {
-						$zip->close();
-						$zip->open($path);
+					if($rcont === false) {
+						$zip->addFile(cleanPath(ROOT_PATH . "/" . $entry),substr($entry,1));
+						
+						if(($zip->numFies % 256) == 0) {
+							$zip->close();
+							$zip->open($path);
+						}
 					}
+					//echo $entry . ":" . $time . ":" . $hash . ":" . ($rcont ? "TRUE" : "FALSE") . "<br>";
 				}
-				//echo $entry . ":" . $time . ":" . $hash . ":" . ($rcont ? "TRUE" : "FALSE") . "<br>";
 			}
 		}
 	}
