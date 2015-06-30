@@ -6,6 +6,7 @@ $path = cleanPath($_GET['path']);
 $pages_table = Table::open("cms2-pages");
 if(!$pages_table) {
 	error_log("cms2-pages table is missing!");
+	fatal_error();
 }
 $page = $pages_table->getRow($_GET["index"]);
 
@@ -18,11 +19,16 @@ if($action == "save") {
 	$page->write();
 
 	//Templating stuff time
-	$template = file_get_contents(cleanPath(ROOT_PATH . $page->template_path));
-	$output = template_match($template,"template_replace",$page);
+	if($page->templage_path != "") {
+		$template = file_get_contents(cleanPath(ROOT_DIR . $page->template_path));
+		$output = template_match($template,"template_replace",$page);
+	}
+	else {
+		$output = template_match($page->body,"template_replace",$page);
+	}
 
-	file_put_contents(ROOT_PATH . $path,$output);
-	chmod(ROOT_PATH . $path,0664);
+	file_put_contents(ROOT_DIR . $path,$output);
+	chmod(ROOT_DIR . $path,0664);
 	
 	header( "Location: dynamic.php?path=" . urlencode($path) . "&index=" . urlencode($page->index));
 }
