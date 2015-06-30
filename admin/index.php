@@ -56,12 +56,6 @@ if($action == "regenerate") {
 }
 
 function hash_files($dirname,$zip) {
-	if(cleanPath(ROOT_PATH . $dirname) == cleanPath(ADMIN_DIR . "/tmp/")) {
-		return;
-	}
-	if(cleanPath(ROOT_PATH . $dirname) == cleanPath(ADMIN_DIR . "/session/")) {
-		return;
-	}
 	//echo "Entering dir: " . $dirname . "<br>";
 	$zip->addEmptyDir(substr($dirname,1));
 	$dir = dir(cleanPath(ROOT_PATH . $dirname));
@@ -101,11 +95,20 @@ if($action == "hash") {
     readfile(cleanPath(ADMIN_DIR . "/tmp/hash.zip"));
 }
 
-function backup_files($dirname,$hzip,$zip) {
+function backup_files($dirname,$hzip,$zip,$path) {
 	if(cleanPath(ROOT_PATH . $dirname) == cleanPath(ADMIN_DIR . "/tmp/")) {
 		return;
 	}
 	if(cleanPath(ROOT_PATH . $dirname) == cleanPath(ADMIN_DIR . "/session/")) {
+		return;
+	}
+	if(cleanPath(ROOT_PATH . $dirname) == cleanPath(ROOT_PATH . "/.git/")) {
+		return;
+	}
+	if(cleanPath(ROOT_PATH . $dirname) == cleanPath(ROOT_PATH . "/ace-builds/")) {
+		return;
+	}
+	if(cleanPath(ROOT_PATH . $dirname) == cleanPath(ROOT_PATH . "/admin/")) {
 		return;
 	}
 	//echo "Entering dir: " . $dirname . "<br>";
@@ -115,7 +118,7 @@ function backup_files($dirname,$hzip,$zip) {
 		if($entry != "." && $entry != "..") {
 			$entry = cleanPath($dirname . "/" . $entry);
 			if(is_dir(cleanPath(ROOT_PATH . $entry))) {
-				backup_files($entry,$hzip,$zip);
+				backup_files($entry,$hzip,$zip,$path);
 			}
 			else {
 				$rcont = $hzip->getFromName(substr($entry,1));
@@ -133,6 +136,11 @@ function backup_files($dirname,$hzip,$zip) {
 				}
 				if($rcont === false) {
 					$zip->addFile(cleanPath(ROOT_PATH . "/" . $entry),substr($entry,1));
+
+					if(($zip->numFies % 256) == 0) {
+						$zip->close();
+						$zip->open($path);
+					}
 				}
 				//echo $entry . ":" . $time . ":" . $hash . ":" . ($rcont ? "TRUE" : "FALSE") . "<br>";
 			}
@@ -156,8 +164,9 @@ if($action == "backup") {
 	$zip = new ZipArchive();
 	$zip->open(cleanPath(ADMIN_DIR . "/tmp/backup.zip"),ZipArchive::CREATE);
 
-	backup_files("/",$hzip,$zip);
+	backup_files("/",$hzip,$zip,cleanPath(ADMIN_DIR . "/tmp/backup.zip"));
 
+	$hzip->close();
 	$zip->close();
 	chmod(cleanPath(ADMIN_DIR . "/tmp/backup.zip"),0664);
 
@@ -169,6 +178,35 @@ if($action == "backup") {
     header('Pragma: public');
     header('Content-Length: ' . filesize(cleanPath(ADMIN_DIR . "/tmp/backup.zip")));
     readfile(cleanPath(ADMIN_DIR . "/tmp/backup.zip"));
+}
+
+if($action == "restore") {
+	unlink(cleanPath(ADMIN_DIR . "/tmp/backup.zip"));
+	if($_FILES["backup"]["error"] == UPLOAD_ERR_OK) {
+		if ($_FILES["backup"]["error"] == UPLOAD_ERR_OK) {
+			$tmp_name = $_FILES["backup"]["tmp_name"];
+			move_uploaded_file($tmp_name, cleanPath(ADMIN_DIR . "/tmp/backup.zip"));
+			chmod(cleanPath(ADMIN_DIR . "/tmp/backup.zip"),0664);
+		}
+	}
+
+	$zip = new ZipArchive();
+	$zip->open(cleanPath(ADMIN_DIR . "/tmp/backup.zip"));
+
+	$zip->extractTo(ROOT_PATH);
+
+	for($i = 0;$i < $zip->numFiles;$i++) {
+		$filename = cleanPath(ROOT_PATH . "/" . $zip->getNameIndex($i));
+		if(is_dir($filename)) {
+			chmod($filename,0775);
+		}
+		else {
+			chmod($filename,0664);
+		}
+	}
+
+	$zip->close();
+	//header( "Location: index.php" );
 }
 
 ?>
@@ -192,7 +230,10 @@ if($action == "backup") {
 				<input name="hash" type="file"/><br />
 				<input type="submit" value="Generate Backup"/>
 			</form>
-			<a href="index.php?action=restore">Restore Backup</a><br>
+			<form action="index.php?action=restore" method="POST" enctype="multipart/form-data">
+				<input name="backup" type="file"/><br />
+				<input type="submit" value="Restore Backup"/>
+			</form>
 		</div>
 	</body>
 </html>
