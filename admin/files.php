@@ -259,8 +259,20 @@ else if($action == "switchview") {
 					<input type="text" name="name">
 					<input type="submit" value="New Template">
 				</form>
+				<hr>
 				<form action="files.php?action=newdynamic&path=<?php echo $path ?>" method="POST"><!-- Have to change this line somehow -->
-					<input type="text" name="name">
+					<input type="text" name="name" placeholder="Page Name">
+					<select name="parent">
+						<option value="/">/</option>
+						<?php
+						foreach($pages as $page) {
+						?>
+							<option value="<?php echo dirname($page->out_path)?>"><?php echo dirname($page->out_path)?></option>
+						<?php
+						}
+						?>
+					</select>
+					<br>
 					<input type="submit" value="New Page">
 				</form>
 				<?php } ?>

@@ -26,6 +26,13 @@ input {
 	line-height: inherit;
 }
 
+hr {
+	margin-top:20px;
+	margin-bottom:20px;
+	border:0;
+	border-top:1px solid #eee;
+}
+
 #login {
 	width: 320px;
 	margin: auto;
