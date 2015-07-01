@@ -260,7 +260,7 @@ else if($action == "switchview") {
 					<input type="submit" value="New Template">
 				</form>
 				<hr>
-				<form action="files.php?action=newdynamic&path=/ method="POST">
+				<form action="files.php?action=newdynamic&path=/" method="POST">
 					<input type="text" name="name" placeholder="Page Name">
 					<select name="parent">
 						<option value="/">/</option>
