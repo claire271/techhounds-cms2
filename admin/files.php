@@ -73,13 +73,35 @@ else if($action == "newstatic") {
 	$real_path = cleanPath($file_path . "/" . $_POST["name"]);
 	touch($real_path);
 	chmod($real_path,0664);
-	header( "Location: files.php?path=" . $path);
+
+	if($_SESSION["view"] == "simple"){
+		header( "Location: files.php" );
+	}
+	else {
+		header( "Location: files.php?path=" . $path);
+	}
 }
 else if($action == "newdynamic") {
 	$page = $pages_table->createRow();
-	$page->out_path = cleanPath($path . "/" . $_POST["name"]);
-	$page->write();
-	header( "Location: files.php?path=" . $path);
+
+	if($_SESSION["view"] == "simple"){
+
+		$real_path = cleanPath(ROOT_PATH . "/" . $_POST["name"]);
+
+		if (!file_exists($real_path)) {
+			mkdir($real_path, 0775, true);
+		}
+
+		$page->out_path = cleanPath("/" . $_POST["name"] . "/index.php");
+		$page->write();
+
+		header( "Location: files.php" );
+	}
+	else {
+		$page->out_path = cleanPath($path . "/" . $_POST["name"]);
+		$page->write();
+		header( "Location: files.php?path=" . $path);
+	}
 }
 else if($action == "rename") {
 	$in = $_POST["in"];
@@ -194,20 +216,17 @@ else if($action == "switchview") {
 						</thead>
 						<tbody>
 							<?php
-							foreach($files as $file) {
-								$new_path = cleanPath($path . "/" . $file->name);
-								if($file->flag == "dynamic") {
+							foreach($pages as $page) {
 							?>
 								<tr>
 									<td class="delete">
-										<a href="files.php?action=delete&type=dynamic&path=<?php echo $path ?>&name=<?php echo $file->name ?>&index=<?php echo $file->index ?>" style="color:#0F0F0F">×</a>
+										<a href="files.php?action=delete&type=dynamic&path=<?php echo dirname($page->out_path) ?>&name=<?php echo basename($page->out_path) ?>&index=<?php echo $page->index ?>" style="color:#0F0F0F">×</a>
 									</td>
 									<td>
-										<a href="dynamic.php?path=<?php echo $new_path ?>&index=<?php echo $file->index ?>"><?php echo $file->name ?>
+										<a href="dynamic.php?path=<?php echo $page->out_path ?>&index=<?php echo $page->index ?>"><?php echo basename(dirname($page->out_path)) ?>
 									</td>
 								</tr>
 							<?php
-							}
 							}
 							?>
 						</tbody>
@@ -250,7 +269,6 @@ else if($action == "switchview") {
 				</form>
 				<script>
 				window.onload = function() {
-
 					var input = document.getElementById("viewInput");
 					if("<?php echo $_SESSION["view"]?>" === "simple"){
 						input.checked = true;
