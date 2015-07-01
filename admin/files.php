@@ -85,14 +85,14 @@ else if($action == "newdynamic") {
 	$page = $pages_table->createRow();
 
 	if($_SESSION["view"] == "simple"){
-
-		$real_path = cleanPath(ROOT_PATH . "/" . $_POST["name"]);
+		$parent = $_POST["parent"];
+		$real_path = cleanPath(ROOT_PATH . $parent . $_POST["name"]);
 
 		if (!file_exists($real_path)) {
 			mkdir($real_path, 0775, true);
 		}
 
-		$page->out_path = cleanPath("/" . $_POST["name"] . "/index.php");
+		$page->out_path = cleanPath($parent . $_POST["name"] . "/index.php");
 		$page->write();
 
 		header( "Location: files.php" );
@@ -260,14 +260,14 @@ else if($action == "switchview") {
 					<input type="submit" value="New Template">
 				</form>
 				<hr>
-				<form action="files.php?action=newdynamic&path=<?php echo $path ?>" method="POST"><!-- Have to change this line somehow -->
+				<form action="files.php?action=newdynamic&path=/ method="POST">
 					<input type="text" name="name" placeholder="Page Name">
 					<select name="parent">
 						<option value="/">/</option>
 						<?php
 						foreach($pages as $page) {
 						?>
-							<option value="<?php echo dirname($page->out_path)?>"><?php echo dirname($page->out_path)?></option>
+							<option value="<?php echo dirname($page->out_path) . '/'?>"><?php echo dirname($page->out_path) . '/'?></option>
 						<?php
 						}
 						?>
