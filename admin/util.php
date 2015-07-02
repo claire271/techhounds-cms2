@@ -11,21 +11,21 @@ function cleanPath($path) {
 	$path = str_replace("\\","/",$path);
 	$leading = substr($path,0,1) == "/";
 
-  $substrings = explode("/",$path);
+	$substrings = explode("/",$path);
 	
-  $parts = array();
+	$parts = array();
 	foreach($substrings as $substring) {
-    if($substring == "..") {
-      array_pop($parts);
-    }
-    else if($substring == ".") {}
-    else if($substring == "") {}
-    else {
-      array_push($parts,$substring);
-    }
-  }
+		if($substring == "..") {
+			array_pop($parts);
+		}
+		else if($substring == ".") {}
+		else if($substring == "") {}
+		else {
+			array_push($parts,$substring);
+		}
+	}
 
-  return ($leading ? "/" : "") . implode("/",$parts);
+	return ($leading ? "/" : "") . implode("/",$parts);
 }
 
 //Template replacing function

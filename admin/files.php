@@ -134,6 +134,28 @@ else if($action == "switchview") {
 	header( "Location: files.php?path=/" );
 }
 
+function checkForParent($target, $pages){
+	$targetPaths = explode("/",dirname($target->out_path));
+	//print_r($targetPaths);
+
+	$targetInt = count($targetPaths);
+
+	foreach($pages as $page){
+
+		$pagePaths = explode("/",dirname($page->out_path));
+		//print_r($pagePaths);
+
+		$pageInt = count($pagePaths);
+
+		if($targetInt < $pageInt) {
+			echo "this is stupid";
+		}
+		else if($targetInt > $pageInt) {
+			echo "this is not stupid";
+		}
+	}
+}
+
 ?>
 <html>
 	<head>
@@ -217,6 +239,8 @@ else if($action == "switchview") {
 						<tbody>
 							<?php
 							foreach($pages as $page) {
+								checkForParent($page, $pages);
+								//print_r(count($pages))
 							?>
 								<tr>
 									<td class="delete">
