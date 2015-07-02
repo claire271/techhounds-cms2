@@ -8,6 +8,26 @@ if(!$pages_table) {
 
 $pages = $pages_table->getRows();
 
+if($_SESSION["view"] == "simple"){
+	foreach($pages as $page){
+		$pagePaths = explode("/",dirname($page->out_path));
+		//print_r($pagePaths);
+
+		$pageInt = count($pagePaths);
+
+		$page->exploded_path = $pageInt;
+	}
+	usort($pages, function($a, $b) {
+		$a = $a->exploded_path;
+		$b = $b->exploded_path;
+		if ($a == $b) {
+			return 0;
+		}
+		return ($a < $b) ? 1 : -1;
+	});
+	print_r($pages);
+}
+
 $path = isset( $_GET['path'] ) ? $_GET['path'] : "/";
 $path = cleanPath($path);
 $file_path = ROOT_PATH . $path;
@@ -136,6 +156,7 @@ else if($action == "switchview") {
 
 function checkForParent($target, $pages){
 	$targetPaths = explode("/",dirname($target->out_path));
+	print_r($pages);
 	//print_r($targetPaths);
 
 	$targetInt = count($targetPaths);
