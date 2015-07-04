@@ -81,19 +81,39 @@ else if($action == "newdynamic") {
 	$page->write();
 	header( "Location: files.php?path=" . urlencode($path));
 }
-else if($action == "rename") {
+else if($action == "roc") {
+	$rename = $_POST["type"] == "Rename File/Dir";
 	$in = $_POST["in"];
 	$out = $_POST["out"];
 	foreach($files as $file) {
 		if($file->name != ".." && $file->name != "." && $file->name == basename($in)) {
 			if($file->flag == "static" || $file->flag == "dir") {
-				rename(cleanPath(ROOT_DIR . $in),cleanPath(ROOT_DIR . $out));
+				if($rename) {
+					rename(cleanPath(ROOT_DIR . $in),cleanPath(ROOT_DIR . $out));
+				}
+				else {
+					copy(cleanPath(ROOT_DIR . $in),cleanPath(ROOT_DIR . $out));
+				}
 			}
 			else if($file->flag == "dynamic") {
-				rename(cleanPath(ROOT_DIR . $in),cleanPath(ROOT_DIR . $out));
-				$page = $pages_table->getRow($file->index);
-				$page->out_path = cleanPath($out);
-				$page->write();
+				if($rename) {
+					rename(cleanPath(ROOT_DIR . $in),cleanPath(ROOT_DIR . $out));
+					$page = $pages_table->getRow($file->index);
+					$page->out_path = cleanPath($out);
+					$page->write();
+				}
+				else {
+					copy(cleanPath(ROOT_DIR . $in),cleanPath(ROOT_DIR . $out));
+					$page_in = $pages_table->getRow($file->index);
+					$page_out = $pages_table->createRow();
+					$page_out->out_path = cleanPath($out);
+					$page_out->template_path = $page_in->template_path;
+					$page_out->params = $page_in->params;
+					$page_out->body = $page_in->body;
+					$page_out->date = $page_in->date;
+					$page_in->write();
+					$page_out->write();
+				}
 			}
 			break;
 		}
@@ -127,10 +147,13 @@ else if($action == "rename") {
 						?>
 							<tr style="background-color: #F7F7F7">
 								<td class="delete">
-									<a href="files.php?action=delete&type=dir&path=<?php echo urlencode($path) ?>&name=<?php echo urlencode($file->name) ?>" style="color:#0F0F0F">×</a>
+									<a href="files.php?action=delete&type=dir&path=<?php echo urlencode($path) ?>&name=<?php echo urlencode($file->name) ?>">×</a>
 								</td>
 								<td>
 									<a href="files.php?path=<?php echo urlencode($new_path) ?>" style="color:#0000FF"><?php echo $file->name ?></a><br>
+								</td>
+								<td class="delete">
+									<a href="javascript:setRCParams('<?php echo urlencode($new_path) ?>');">R/C</a>
 								</td>
 							</tr>
 						<?php
@@ -139,10 +162,13 @@ else if($action == "rename") {
 						?>
 							<tr>
 								<td class="delete">
-									<a href="files.php?action=delete&type=static&path=<?php echo urlencode($path) ?>&name=<?php echo urlencode($file->name) ?>" style="color:#0F0F0F">×</a>
+									<a href="files.php?action=delete&type=static&path=<?php echo urlencode($path) ?>&name=<?php echo urlencode($file->name) ?>">×</a>
 								</td>
 								<td>
 									<a href="static.php?path=<?php echo urlencode($new_path) ?>" style="color:#FF0000"><?php echo $file->name ?></a><br>
+								</td>
+								<td class="delete">
+									<a href="javascript:setRCParams('<?php echo urlencode($new_path) ?>');">R/C</a>
 								</td>
 							</tr>
 						<?php
@@ -151,10 +177,13 @@ else if($action == "rename") {
 						?>
 							<tr>
 								<td class="delete">
-									<a href="files.php?action=delete&type=dynamic&path=<?php echo urlencode($path) ?>&name=<?php echo urlencode($file->name) ?>&index=<?php echo urlencode($file->index) ?>" style="color:#0F0F0F">×</a>
+									<a href="files.php?action=delete&type=dynamic&path=<?php echo urlencode($path) ?>&name=<?php echo urlencode($file->name) ?>&index=<?php echo urlencode($file->index) ?>">×</a>
 								</td>
 								<td>
 									<a href="dynamic.php?path=<?php echo urlencode($new_path) ?>&index=<?php echo urlencode($file->index) ?>" style="color:#FF00FF"><?php echo $file->name ?></a><br>
+								</td>
+								<td class="delete">
+									<a href="javascript:setRCParams('<?php echo urlencode($new_path) ?>');">R/C</a>
 								</td>
 							</tr>
 						<?php
@@ -177,10 +206,11 @@ else if($action == "rename") {
 					<input type="text" name="name">
 					<input type="submit" value="Create Dynamic File">
 				</form>
-				<form action="files.php?action=rename&path=<?php echo urlencode($path) ?>" method="POST">
-					IN: <input type="text" name="in" value="<?php echo $path ?>"><br/>
-					OUT: <input type="text" name="out" value="<?php echo $path ?>"><br/>
-					<input type="submit" value="Rename File">
+				<form action="files.php?action=roc&path=<?php echo urlencode($path) ?>" method="POST">
+					IN: <input id="rcin" type="text" name="in" value="<?php echo $path ?>"><br/>
+					OUT: <input id="rcout" type="text" name="out" value="<?php echo $path ?>"><br/>
+					<input name="type" type="submit" value="Rename File/Dir">
+					<input name="type" type="submit" value="Copy File/Dir">
 				</form>
 				<a class="button" href="upload.php?path=<?php echo urlencode($path) ?>">Upload Files</a>
 				<br>
@@ -189,4 +219,10 @@ else if($action == "rename") {
 			</div>
 		</div>
 	</body>
+	<script type="text/javascript">
+	function setRCParams(name) {
+		document.getElementById("rcin").value = name;
+		document.getElementById("rcout").value = name;
+	}
+	</script>
 </html>
