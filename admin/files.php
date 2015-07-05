@@ -25,7 +25,7 @@ if($_SESSION["view"] == "simple"){
 		}
 		return ($a < $b) ? 1 : -1;
 	});
-	print_r($pages);
+	//print_r($pages);
 }
 
 $path = isset( $_GET['path'] ) ? $_GET['path'] : "/";
@@ -155,11 +155,13 @@ else if($action == "switchview") {
 }
 
 function checkForParent($target, $pages){
+	$parent = false;
 	$targetPaths = explode("/",dirname($target->out_path));
-	print_r($pages);
+	//print_r($pages);
 	//print_r($targetPaths);
 
 	$targetInt = count($targetPaths);
+	echo $targetInt;
 
 	foreach($pages as $page){
 
@@ -167,13 +169,20 @@ function checkForParent($target, $pages){
 		//print_r($pagePaths);
 
 		$pageInt = count($pagePaths);
+		echo $pageInt;
 
-		if($targetInt < $pageInt) {
-			echo "this is stupid";
+		if($targetInt == $pageInt + 1) {
+			//echo "this is stupid";
+			for($i = 0; $i < $pageInt; $i++) {
+				if($targetPaths[$i] == $pagePaths[$i]) {
+					$parent = true;
+				}
+			}
 		}
-		else if($targetInt > $pageInt) {
-			echo "this is not stupid";
-		}
+	}
+
+	if($parent == true){
+		echo "yes";
 	}
 }
 
@@ -260,15 +269,39 @@ function checkForParent($target, $pages){
 						<tbody>
 							<?php
 							foreach($pages as $page) {
-								checkForParent($page, $pages);
-								//print_r(count($pages))
+								//checkForParent($page, $pages);
+								$has_parent = false;
+								$targetPaths = explode("/",dirname($page->out_path));
+								//print_r($pages);
+								//print_r($targetPaths);
+
+								$targetInt = count($targetPaths);
+								echo $targetInt;
+
+								foreach($pages as $page2){
+
+									$pagePaths = explode("/",dirname($page2->out_path));
+									//print_r($pagePaths);
+
+									$pageInt = count($pagePaths);
+									echo $pageInt;
+
+									if($targetInt == $pageInt + 1) {
+										//echo "this is stupid";
+										for($i = 0; $i < $pageInt; $i++) {
+											if($targetPaths[$i] == $pagePaths[$i]) {
+												$has_parent = true;
+											}
+										}
+									}
+								}
 							?>
 								<tr>
 									<td class="delete">
 										<a href="files.php?action=delete&type=dynamic&path=<?php echo dirname($page->out_path) ?>&name=<?php echo basename($page->out_path) ?>&index=<?php echo $page->index ?>" style="color:#0F0F0F">×</a>
 									</td>
 									<td>
-										<a href="dynamic.php?path=<?php echo $page->out_path ?>&index=<?php echo $page->index ?>"><?php echo basename(dirname($page->out_path)) ?>
+										<a href="dynamic.php?path=<?php echo $page->out_path ?>&index=<?php echo $page->index ?>"><?php if($has_parent){echo "- " . str_repeat("&nbsp;", $targetInt - 3);} echo basename(dirname($page->out_path)) ?>
 									</td>
 								</tr>
 							<?php
