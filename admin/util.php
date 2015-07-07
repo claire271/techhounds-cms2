@@ -84,6 +84,10 @@ function template_replace($input,$page,$vars) {
 		$array = $vars[$name];
 		return $array[count($array) - 1];
 	}
+	else if(strlen($input) > strlen("eval:") && substr($input,0,strlen("eval:")) == "eval:") {
+		$input = trim(substr($input,strlen("eval:")));
+		return eval($input);
+	}
 	else {
 		return $page->$input;
 	}
