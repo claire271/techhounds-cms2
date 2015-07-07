@@ -25,6 +25,9 @@ if($_SESSION["view"] == "simple"){
 		}
 		return ($a < $b) ? 1 : -1;
 	});
+
+	$pages2 = array();
+	$pages2 = $pages;
 	//print_r($pages);
 }
 
@@ -273,7 +276,7 @@ function checkForParent($target, $pages){
 							<?php
 							foreach($pages as $target) {
 								//checkForParent($page, $pages);
-								$has_parent = false;
+								$has_parent = true;
 								$targetPaths = explode("/",dirname($target->out_path));
 								//print_r($pages);
 								//print_r($targetPaths);
@@ -292,13 +295,14 @@ function checkForParent($target, $pages){
 									if($targetInt == $pageInt + 1) {
 										//echo "this is stupid";
 										for($i = 0; $i < $pageInt; $i++) {
-											if($targetPaths[$i] == $pagePaths[$i]) {
-												$has_parent = true;
+											if($targetPaths[$i] != $pagePaths[$i]) {
+												$has_parent = false;
 											}
 										}
-
 										if($has_parent == true){
-											$page->children = array();
+											if(!property_exists($page,'children')){
+												$page->children = array();
+											}
 											array_push($page->children, $target);
 											unset($pages[array_search($target,$pages)]);
 										}
@@ -356,7 +360,7 @@ function checkForParent($target, $pages){
 					<select name="parent">
 						<option value="/">/</option>
 						<?php
-						foreach($pages as $page) {
+						foreach($pages2 as $page) {
 						?>
 							<option value="<?php echo dirname($page->out_path) . '/'?>"><?php echo dirname($page->out_path) . '/'?></option>
 						<?php
