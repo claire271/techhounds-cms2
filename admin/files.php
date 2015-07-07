@@ -276,7 +276,6 @@ function checkForParent($target, $pages){
 							<?php
 							foreach($pages as $target) {
 								//checkForParent($page, $pages);
-								$has_parent = true;
 								$targetPaths = explode("/",dirname($target->out_path));
 								//print_r($pages);
 								//print_r($targetPaths);
@@ -285,7 +284,7 @@ function checkForParent($target, $pages){
 								//echo $targetInt;
 
 								foreach($pages as $page){
-
+									$has_parent = true;
 									$pagePaths = explode("/",dirname($page->out_path));
 									//print_r($pagePaths);
 
@@ -299,6 +298,7 @@ function checkForParent($target, $pages){
 												$has_parent = false;
 											}
 										}
+
 										if($has_parent == true){
 											if(!property_exists($page,'children')){
 												$page->children = array();
