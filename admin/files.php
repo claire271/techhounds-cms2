@@ -155,13 +155,13 @@ else if($action == "switchview") {
 }
 
 function checkForParent($target, $pages){
-	$parent = false;
+	$has_parent = false;
 	$targetPaths = explode("/",dirname($target->out_path));
 	//print_r($pages);
 	//print_r($targetPaths);
 
 	$targetInt = count($targetPaths);
-	echo $targetInt;
+	//echo $targetInt;
 
 	foreach($pages as $page){
 
@@ -169,20 +169,23 @@ function checkForParent($target, $pages){
 		//print_r($pagePaths);
 
 		$pageInt = count($pagePaths);
-		echo $pageInt;
+		//echo $pageInt;
 
 		if($targetInt == $pageInt + 1) {
 			//echo "this is stupid";
 			for($i = 0; $i < $pageInt; $i++) {
 				if($targetPaths[$i] == $pagePaths[$i]) {
-					$parent = true;
+					$has_parent = true;
 				}
 			}
-		}
-	}
 
-	if($parent == true){
-		echo "yes";
+			if($has_parent == true){
+				$page->children = array();
+				array_push($page->children, $target);
+				unset($pages[array_search($target,$pages)]);
+			}
+		}
+		//echo basename(dirname($page->out_path));
 	}
 }
 
@@ -268,23 +271,22 @@ function checkForParent($target, $pages){
 						</thead>
 						<tbody>
 							<?php
-							foreach($pages as $page) {
-								//checkForParent($page, $pages);
-								$has_parent = false;
-								$targetPaths = explode("/",dirname($page->out_path));
+							foreach($pages as $target) {
+								//checkForParent($page, $pages);$has_parent = false;
+								$targetPaths = explode("/",dirname($target->out_path));
 								//print_r($pages);
 								//print_r($targetPaths);
 
 								$targetInt = count($targetPaths);
-								echo $targetInt;
+								//echo $targetInt;
 
-								foreach($pages as $page2){
+								foreach($pages as $page){
 
-									$pagePaths = explode("/",dirname($page2->out_path));
+									$pagePaths = explode("/",dirname($page->out_path));
 									//print_r($pagePaths);
 
 									$pageInt = count($pagePaths);
-									echo $pageInt;
+									//echo $pageInt;
 
 									if($targetInt == $pageInt + 1) {
 										//echo "this is stupid";
@@ -293,19 +295,29 @@ function checkForParent($target, $pages){
 												$has_parent = true;
 											}
 										}
+
+										if($has_parent == true){
+											$page->children = array();
+											array_push($page->children, $target);
+											unset($pages[array_search($target,$pages)]);
+										}
 									}
+									//echo basename(dirname($page->out_path));
 								}
 							?>
 								<tr>
 									<td class="delete">
-										<a href="files.php?action=delete&type=dynamic&path=<?php echo dirname($page->out_path) ?>&name=<?php echo basename($page->out_path) ?>&index=<?php echo $page->index ?>" style="color:#0F0F0F">×</a>
+										<a href="files.php?action=delete&type=dynamic&path=<?php echo dirname($target->out_path) ?>&name=<?php echo basename($target->out_path) ?>&index=<?php echo $target->index ?>" style="color:#0F0F0F">×</a>
 									</td>
 									<td>
-										<a href="dynamic.php?path=<?php echo $page->out_path ?>&index=<?php echo $page->index ?>"><?php if($has_parent){echo "- " . str_repeat("&nbsp;", $targetInt - 3);} echo basename(dirname($page->out_path)) ?>
+										<a href="dynamic.php?path=<?php echo $target->out_path ?>&index=<?php echo $target->index ?>"><?php echo basename(dirname($target->out_path)) ?>
 									</td>
 								</tr>
 							<?php
 							}
+							print "<pre>";
+							print_r($pages);
+							print "</pre>";
 							?>
 						</tbody>
 					</table>
