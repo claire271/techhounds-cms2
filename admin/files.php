@@ -184,6 +184,23 @@ else if($action == "switchview") {
 	header( "Location: files.php?path=/" );
 }
 
+function generateHTML($depth, $page){ ?>
+	<tr>
+		<td class="delete">
+			<a href="files.php?action=delete&type=dynamic&path=<?php echo dirname($page->out_path) ?>&name=<?php echo basename($page->out_path) ?>&index=<?php echo $page->index ?>" style="color:#0F0F0F">×</a>
+		</td>
+		<td>
+			<a style="padding-left:<?php echo 20 * $depth?>px;" href="dynamic.php?path=<?php echo $page->out_path ?>&index=<?php echo $page->index ?>"><?php echo basename(dirname($page->out_path)) ?>
+		</td>
+	</tr>
+	<?php
+	if(property_exists($page, 'children')) {
+		$children = $page->children;
+		foreach($children as $child){
+			generateHTML($depth+1, $child);
+		}
+	}
+	};
 ?>
 <html>
 	<head>
@@ -267,6 +284,7 @@ else if($action == "switchview") {
 						<tbody>
 							<?php
 							foreach($pages as $page) {
+								$depth = 1;
 							?>
 								<tr>
 									<td class="delete">
@@ -277,26 +295,17 @@ else if($action == "switchview") {
 									</td>
 								</tr>
 							<?php
+
 							if(property_exists($page, 'children')) {
-								//echo "yes";
 								$children = $page->children;
-								print_r($children);
 								foreach($children as $child){
-							?>
-								<tr>
-									<td class="delete">
-										<a href="files.php?action=delete&type=dynamic&path=<?php echo dirname($child->out_path) ?>&name=<?php echo basename($child->out_path) ?>&index=<?php echo $child->index ?>" style="color:#0F0F0F">×</a>
-									</td>
-									<td>
-										<a style="padding-left:20px;" href="dynamic.php?path=<?php echo $child->out_path ?>&index=<?php echo $child->index ?>"><?php echo basename(dirname($child->out_path)) ?>
-									</td>
-								</tr>
-							<?php
-							}
+									//print_r($child);
+									generateHTML($depth, $child);
+								}
 							}
 							}
 							/*print "<pre>";
-							print_r($pages);
+							   print_r($pages);
 							print "</pre>";*/
 							?>
 						</tbody>
