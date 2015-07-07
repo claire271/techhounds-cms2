@@ -272,7 +272,8 @@ function checkForParent($target, $pages){
 						<tbody>
 							<?php
 							foreach($pages as $target) {
-								//checkForParent($page, $pages);$has_parent = false;
+								//checkForParent($page, $pages);
+								$has_parent = false;
 								$targetPaths = explode("/",dirname($target->out_path));
 								//print_r($pages);
 								//print_r($targetPaths);
