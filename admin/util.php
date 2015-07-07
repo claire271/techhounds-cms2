@@ -87,7 +87,7 @@ function template_replace($input,$page,$vars) {
 		$input = trim(substr($input,strlen("eval:")));
 		ob_start();
 		eval($input);
-		return ob_get_flush();
+		return ob_get_clean();
 	}
 	else {
 		return $page->$input;
