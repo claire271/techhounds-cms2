@@ -71,7 +71,6 @@ function template_replace($input,$page,$vars) {
 			$vars[$name] = array();
 		}
 		array_push($vars[$name],$value);
-		error_log(print_r($vars,true));
 		return $vars;
 	}
 	else if(strlen($input) > strlen("varclear:") && substr($input,0,strlen("varclear:")) == "varclear:") {
@@ -86,7 +85,9 @@ function template_replace($input,$page,$vars) {
 	}
 	else if(strlen($input) > strlen("eval:") && substr($input,0,strlen("eval:")) == "eval:") {
 		$input = trim(substr($input,strlen("eval:")));
-		return eval($input);
+		ob_start();
+		eval($input);
+		return ob_get_flush();
 	}
 	else {
 		return $page->$input;
