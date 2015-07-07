@@ -28,10 +28,25 @@ function cleanPath($path) {
   return ($leading ? "/" : "") . implode("/",$parts);
 }
 
+//Template clearing function
+function template_clear($input,$page,$vars) {
+	return "";
+}
+
 //Template replacing function
-function template_replace($input,$page) {
+function template_replace($input,$page,$vars) {
 	if(strlen($input) > strlen("file:") && substr($input,0,strlen("file:")) == "file:") {
-		return file_get_contents(cleanPath(ROOT_DIR . trim(substr($input,strlen("file:")))));
+		$parts = explode(",,",trim(substr($input,strlen("file:"))));
+		$output = "";
+		for($i = 1;$i < count($parts);$i++) {
+			$output .= "{{varset:" . ($i - 1) . ":" . $parts[$i] . "}}";
+		}
+		$output .= file_get_contents(cleanPath(ROOT_DIR . $parts[0]));
+		for($i = 1;$i < count($parts);$i++) {
+			$output .= "{{varclear:" . ($i - 1) . "}}";
+		}
+		//return file_get_contents(cleanPath(ROOT_DIR . $parts[0]));
+		return $output;
 	}
 	else if(strlen($input) > strlen("param:") && substr($input,0,strlen("param:")) == "param:") {
 		$params = explode("\n",$page->params);
@@ -46,6 +61,29 @@ function template_replace($input,$page) {
 			}
 		}
 	}
+	else if(strlen($input) > strlen("varset:") && substr($input,0,strlen("varset:")) == "varset:") {
+		$input = trim(substr($input,strlen("varset:")));
+		$pos = strpos($input,":");
+		$name = substr($input,0,$pos);
+		$value = substr(strstr($input,":"),1);
+
+		if(!isset($vars[$name])) {
+			$vars[$name] = array();
+		}
+		array_push($vars[$name],$value);
+		error_log(print_r($vars,true));
+		return $vars;
+	}
+	else if(strlen($input) > strlen("varclear:") && substr($input,0,strlen("varclear:")) == "varclear:") {
+		$name = trim(substr($input,strlen("varclear:")));
+		array_pop($vars[$name]);
+		return $vars;
+	}
+	else if(strlen($input) > strlen("var:") && substr($input,0,strlen("var:")) == "var:") {
+		$name = trim(substr($input,strlen("var:")));
+		$array = $vars[$name];
+		return $array[count($array) - 1];
+	}
 	else {
 		return $page->$input;
 	}
@@ -56,6 +94,8 @@ function template_match($input,$callback,$page,$level = 8) {
 	if($level <= 0) {
 		return $input;
 	}
+
+	$vars = array();
 
 	$openIndex = -1;
 	$closeIndex = -1;
@@ -68,8 +108,14 @@ function template_match($input,$callback,$page,$level = 8) {
 
 			//Process this match
 			if($openIndex >= 0 && $closeIndex >= 0) {
-				$replacement = $callback(substr($input,$openIndex,$closeIndex - $openIndex + 1),$page);
-				$input = substr($input,0,$openIndex - 2) . $replacement . substr($input,$closeIndex + 3);
+				$replacement = $callback(substr($input,$openIndex,$closeIndex - $openIndex + 1),$page,$vars);
+				if(is_string($replacement)) {
+					$i += strlen($replacement) - ($closeIndex - $openIndex + 4);
+					$input = substr($input,0,$openIndex - 2) . $replacement . substr($input,$closeIndex + 3);
+				}
+				else if(is_array($replacement)) {
+					$vars = $replacement;
+				}
 			}
 
 			//Clean up for next match

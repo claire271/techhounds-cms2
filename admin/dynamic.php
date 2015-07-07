@@ -26,6 +26,7 @@ if($action == "save") {
 	else {
 		$output = template_match($page->body,"template_replace",$page);
 	}
+	$output = template_match($output,"template_clear",$page);
 
 	file_put_contents(ROOT_DIR . $path,$output);
 	chmod(ROOT_DIR . $path,0664);
