@@ -142,7 +142,7 @@ function backup_files($dirname,$hzip,$zip,$path) {
 					if($rcont === false) {
 						$zip->addFile(cleanPath(ROOT_DIR . "/" . $entry),substr($entry,1));
 						
-						if(($zip->numFies % 256) == 0) {
+						if(($zip->numFiles % 256) == 0) {
 							$zip->close();
 							$zip->open($path);
 						}
