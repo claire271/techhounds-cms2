@@ -70,7 +70,7 @@ function hash_files($dirname,$zip) {
 			else {
 				if(filesize(cleanPath(ROOT_DIR. "/" . $entry)) <= 16777216) {
 					$time = filemtime(cleanPath(ROOT_DIR . "/" . $entry));
-					$hash = md5(file_get_contents(cleanPath(ROOT_DIR . "/" . $entry)));
+					$hash = md5_file(cleanPath(ROOT_DIR . "/" . $entry));
 					//echo $entry . ":" . $time . ":" . $hash . "<br>";
 					$zip->addFromString(substr($entry,1),$time . "\n" . $hash);
 				}
@@ -130,7 +130,7 @@ function backup_files($dirname,$hzip,$zip,$path) {
 					$rcont = $hzip->getFromName(substr($entry,1));
 					if($rcont !== false) {
 						$time = filemtime(cleanPath(ROOT_DIR . "/" . $entry));
-						$hash = md5(file_get_contents(cleanPath(ROOT_DIR . "/" . $entry)));
+						$hash = md5_file(cleanPath(ROOT_DIR . "/" . $entry));
 						$rconts = explode("\n",$rcont);
 						$rtime = $rconts[0];
 						$rhash = $rconts[1];
