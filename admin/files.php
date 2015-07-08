@@ -184,16 +184,7 @@ else if($action == "switchview") {
 	header( "Location: files.php?path=/" );
 }
 
-function generateHTML($depth, $page){ ?>
-	<tr>
-		<td class="delete">
-			<a href="files.php?action=delete&type=dynamic&path=<?php echo dirname($page->out_path) ?>&name=<?php echo basename($page->out_path) ?>&index=<?php echo $page->index ?>" style="color:#0F0F0F">×</a>
-		</td>
-		<td>
-			<a style="padding-left:<?php echo 20 * $depth?>px;" href="dynamic.php?path=<?php echo $page->out_path ?>&index=<?php echo $page->index ?>"><?php echo basename(dirname($page->out_path)) ?>
-		</td>
-	</tr>
-	<?php
+function checkForChildren($depth, $page) {
 	if(property_exists($page, 'children')) {
 		$children = $page->children;
 		usort($children, function($a, $b) {
@@ -207,7 +198,20 @@ function generateHTML($depth, $page){ ?>
 			generateHTML($depth+1, $child);
 		}
 	}
-	};
+}
+
+function generateHTML($depth, $page){ ?>
+	<tr>
+		<td class="delete">
+			<a href="files.php?action=delete&type=dynamic&path=<?php echo dirname($page->out_path) ?>&name=<?php echo basename($page->out_path) ?>&index=<?php echo $page->index ?>" style="color:#0F0F0F">×</a>
+		</td>
+		<td>
+			<a style="padding-left:<?php echo 20 * $depth?>px;" href="dynamic.php?path=<?php echo $page->out_path ?>&index=<?php echo $page->index ?>"><?php echo basename(dirname($page->out_path)) ?>
+		</td>
+	</tr>
+	<?php
+	checkForChildren($depth, $page);
+	}	
 ?>
 <html>
 	<head>
@@ -294,11 +298,11 @@ function generateHTML($depth, $page){ ?>
 								$a = basename(dirname($a->out_path));
 								$b = basename(dirname($b->out_path));
 
-								return ($a < $b) ? -1 : 1;
+								return strcmp($a, $b);
 							});
 
 							foreach($pages as $page) {
-								$depth = 1;
+								$depth = 0;
 							?>
 								<tr>
 									<td class="delete">
@@ -309,24 +313,8 @@ function generateHTML($depth, $page){ ?>
 									</td>
 								</tr>
 							<?php
-
-							if(property_exists($page, 'children')) {
-								$children = $page->children;
-								usort($children, function($a, $b) {
-									$a = basename(dirname($a->out_path));
-									$b = basename(dirname($b->out_path));
-
-									return strcmp($a, $b);
-								});
-
-								foreach($children as $child){
-									generateHTML($depth, $child);
-								}
+							checkForChildren($depth, $page);
 							}
-							}
-							/*print "<pre>";
-							   print_r($pages);
-							print "</pre>";*/
 							?>
 						</tbody>
 					</table>
