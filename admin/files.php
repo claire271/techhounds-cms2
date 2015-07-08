@@ -196,6 +196,13 @@ function generateHTML($depth, $page){ ?>
 	<?php
 	if(property_exists($page, 'children')) {
 		$children = $page->children;
+		usort($children, function($a, $b) {
+			$a = basename(dirname($a->out_path));
+			$b = basename(dirname($b->out_path));
+
+			return strcmp($a, $b);
+		});
+
 		foreach($children as $child){
 			generateHTML($depth+1, $child);
 		}
@@ -283,6 +290,13 @@ function generateHTML($depth, $page){ ?>
 						</thead>
 						<tbody>
 							<?php
+							usort($pages, function($a, $b) {
+								$a = basename(dirname($a->out_path));
+								$b = basename(dirname($b->out_path));
+
+								return ($a < $b) ? -1 : 1;
+							});
+
 							foreach($pages as $page) {
 								$depth = 1;
 							?>
@@ -298,8 +312,14 @@ function generateHTML($depth, $page){ ?>
 
 							if(property_exists($page, 'children')) {
 								$children = $page->children;
+								usort($children, function($a, $b) {
+									$a = basename(dirname($a->out_path));
+									$b = basename(dirname($b->out_path));
+
+									return strcmp($a, $b);
+								});
+
 								foreach($children as $child){
-									//print_r($child);
 									generateHTML($depth, $child);
 								}
 							}
