@@ -80,6 +80,7 @@ function hash_files($dirname,$zip) {
 }
 
 if($action == "hash") {
+	ini_set("max_execution_time", 300);
 	unlink(cleanPath(ADMIN_DIR . "/tmp/hash.zip"));
 	$zip = new ZipArchive();
 	$zip->open(cleanPath(ADMIN_DIR . "/tmp/hash.zip"),ZipArchive::CREATE);
@@ -155,6 +156,7 @@ function backup_files($dirname,$hzip,$zip,$path) {
 }
 
 if($action == "backup") {
+	ini_set("max_execution_time", 300);
 	unlink(cleanPath(ADMIN_DIR . "/tmp/hash.zip"));
 	if($_FILES["hash"]["error"] == UPLOAD_ERR_OK) {
 		if ($_FILES["hash"]["error"] == UPLOAD_ERR_OK) {
@@ -187,6 +189,7 @@ if($action == "backup") {
 }
 
 if($action == "restore") {
+	ini_set("max_execution_time", 300);
 	unlink(cleanPath(ADMIN_DIR . "/tmp/backup.zip"));
 	if($_FILES["backup"]["error"] == UPLOAD_ERR_OK) {
 		if ($_FILES["backup"]["error"] == UPLOAD_ERR_OK) {
