@@ -22,6 +22,7 @@ if($action == "login") {
 		if($name == $row->name &&
 			 $hash == $row->hash) {
 			$_SESSION["username"] = $name;
+			$_SESSION["permissions"] = $row->permissions;
 			header( "Location: index.php" );
 		}
 	}

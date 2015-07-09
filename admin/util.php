@@ -184,6 +184,8 @@ function tailCustom($filepath, $lines = 1, $adaptive = true) {
 	return trim($output);
 }
 
+
+
 function fatal_error() {
 	header("Location: error.php");
 }
@@ -200,8 +202,8 @@ if(defined("LOGOUT")) {
 //See if logged on already and not on main page
 else if(!defined("MAIN") && !defined("ERROR") && !isset($_SESSION["username"])) {
 	header( "Location: login.php?action=fail" );
-}
 
+}
 $action = isset( $_GET['action'] ) ? $_GET['action'] : "";
 
 ?>
