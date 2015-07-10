@@ -246,6 +246,7 @@ if($action == "restore") {
 				<input type="submit" value="Restore Backup"/>
 			</form>
 			<a href="error.php">View Errors</a><br>
+			<a href="permissions.php">View Permissions</a><br>
 		</div>
 	</body>
 </html>

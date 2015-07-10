@@ -184,7 +184,10 @@ function tailCustom($filepath, $lines = 1, $adaptive = true) {
 	return trim($output);
 }
 
-
+function patternMatch($pattern,$test) {
+	return preg_match("#^" . strtr(preg_quote($pattern, '#'),
+								   array('\*' => '[^\/]*', '\?' => '.')) . "$#", $test);
+}
 
 function fatal_error() {
 	header("Location: error.php");
@@ -195,6 +198,8 @@ require(cleanPath(ROOT_DIR . "/db/db.php"));
 session_save_path(cleanPath(ADMIN_DIR . "/session"));
 session_start();
 
+$action = isset( $_GET['action'] ) ? $_GET['action'] : "";
+
 //Only for login/logout page
 if(defined("LOGOUT")) {
 	unset( $_SESSION['username'] );
@@ -202,8 +207,46 @@ if(defined("LOGOUT")) {
 //See if logged on already and not on main page
 else if(!defined("MAIN") && !defined("ERROR") && !isset($_SESSION["username"])) {
 	header( "Location: login.php?action=fail" );
-
 }
-$action = isset( $_GET['action'] ) ? $_GET['action'] : "";
+//Everything else. Do general permissions checking now
+else {
+	$page = pathinfo($_SERVER['PHP_SELF'],PATHINFO_FILENAME);
+	$perms = $_SESSION["permissions"];
+	$permissions = explode("\n\n",$perms);
+	for($i = 0;$i < count($permissions);$i++) {
+		$permissions[$i] = explode("\n",$permissions[$i]);
+		for($j = 0;$j < count($permissions[$i]);$j++) {
+			$first = substr($permissions[$i][$j],0,1);
+			$rest = substr($permissions[$i][$j],1);
+			if($first == "+") {
+				$permissions[$i][$j] = array();
+				$permissions[$i][$j]["allowed"] = true;
+				$permissions[$i][$j]["action"] = $rest;
+			}
+			else if($first == "-") { 
+				$permissions[$i][$j] = array();
+				$permissions[$i][$j]["allowed"] = false;
+				$permissions[$i][$j]["action"] = $rest;
+			}
+			else {
+				unset($permissions[$i][$j]);
+			}
+		}
+		$permissions[$i] = array_values($permissions[$i]);
+	}
+
+	//Actually checking the permissions
+	$allowed = true;
+	foreach($permissions as $permission) {
+		$parts = explode("/",$permission[0]["action"]);
+		if(patternMatch($parts[0],$page) &&
+		   patternMatch($parts[1],$action)) {
+			$allowed = $permission[0]["allowed"];
+		}
+	}
+	if(!$allowed) {
+		header("Location: permissions.php?action=denied");
+	}
+}
 
 ?>
