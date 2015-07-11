@@ -31,7 +31,7 @@ if($action == "save") {
 	file_put_contents(ROOT_DIR . $path,$output);
 	chmod(ROOT_DIR . $path,0664);
 	
-	header( "Location: dynamic.php?path=" . urlencode($path) . "&index=" . urlencode($page->index));
+	redirect("dynamic.php?path=" . urlencode($path) . "&index=" . urlencode($page->index));
 }
 
 $extension = pathinfo($path,PATHINFO_EXTENSION);

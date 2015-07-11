@@ -23,14 +23,14 @@ if($action == "login") {
 			 $hash == $row->hash) {
 			$_SESSION["username"] = $name;
 			$_SESSION["permissions"] = $row->permissions;
-			header( "Location: index.php" );
+			redirect("index.php");
 		}
 	}
 }
 
 //Reject if no matches found
 if(!isset($_SESSION["username"])) {
-	header( "Location: login.php?action=fail" );
+	redirect("login.php?action=fail");
 }
 
 $pages_table = Table::open("cms2-pages");
@@ -44,7 +44,7 @@ if($action == "purge") {
 	foreach($pages as $page) {
 		unlink(cleanPath(ROOT_DIR . $page->out_path));
 	}
-	header( "Location: index.php" );
+	redirect("index.php");
 }
 
 if($action == "regenerate") {
@@ -55,7 +55,7 @@ if($action == "regenerate") {
 		file_put_contents(ROOT_DIR . $page->out_path,$output);
 		chmod(ROOT_DIR . $page->out_path,0664);
 	}
-	header( "Location: index.php" );
+	redirect("index.php");
 }
 
 function hash_files($dirname,$zip) {
@@ -217,7 +217,7 @@ if($action == "restore") {
 	}
 
 	$zip->close();
-	header( "Location: index.php" );
+	redirect("index.php");
 }
 
 ?>

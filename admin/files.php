@@ -61,25 +61,25 @@ if($action == "delete") {
 		}
 		$pages_table->deleteRow($_GET["index"]);
 	}
-	header( "Location: files.php?path=" . urlencode($path));
+	redirect("files.php?path=" . urlencode($path));
 }
 else if($action == "newdir") {
 	$real_path = cleanPath($file_path . "/" . $_POST["name"]);
 	mkdir($real_path);
 	chmod($real_path,0775);
-	header( "Location: files.php?path=" . urlencode($path));
+	redirect("files.php?path=" . urlencode($path));
 }
 else if($action == "newstatic") {
 	$real_path = cleanPath($file_path . "/" . $_POST["name"]);
 	touch($real_path);
 	chmod($real_path,0664);
-	header( "Location: files.php?path=" . urlencode($path));
+	redirect("files.php?path=" . urlencode($path));
 }
 else if($action == "newdynamic") {
 	$page = $pages_table->createRow();
 	$page->out_path = cleanPath($path . "/" . $_POST["name"]);
 	$page->write();
-	header( "Location: files.php?path=" . urlencode($path));
+	redirect("files.php?path=" . urlencode($path));
 }
 else if($action == "roc") {
 	$rename = $_POST["type"] == "Rename File/Dir";
@@ -118,7 +118,7 @@ else if($action == "roc") {
 			break;
 		}
 	}
-	header( "Location: files.php?path=" . urlencode($path));
+	redirect("files.php?path=" . urlencode($path));
 }
 
 ?>

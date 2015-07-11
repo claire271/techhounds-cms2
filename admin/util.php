@@ -189,9 +189,13 @@ function patternMatch($pattern,$test) {
 								   array('\*' => '[^\/]*', '\?' => '.')) . "$#", $test);
 }
 
-function fatal_error() {
-	header("Location: error.php");
+function redirect($location) {
+	header("Location: " . $location);
 	exit();
+}
+
+function fatal_error() {
+	redirect("error.php");
 }
 
 require(cleanPath(ROOT_DIR . "/db/db.php"));
@@ -207,8 +211,7 @@ if(defined("LOGOUT")) {
 }
 //See if logged on already and not on main page
 else if(!defined("MAIN") && !defined("ERROR") && !isset($_SESSION["username"])) {
-	header( "Location: login.php?action=fail" );
-	exit();
+	redirect("login.php?action=fail");
 }
 //Everything else. Do general permissions checking now
 else {
@@ -243,11 +246,6 @@ else {
 	foreach($permissions as $permission) {
 		if(count($permission) > 0) {
 			$parts = explode("/",$permission[0]["action"]);
-			echo "<pre>";
-			print_r($parts);
-			echo "\n";
-			echo "-" . $page . "-\n-" . $action ."-\n";
-			echo "</pre>";
 			if(patternMatch($parts[0],$page) &&
 			   patternMatch($parts[1],$action)) {
 				$allowed = $permission[0]["allowed"];
@@ -255,7 +253,7 @@ else {
 		}
 	}
 	if(!$allowed) {
-		header("Location: permissions.php?action=denied");
+		redirect("permissions.php?action=denied");
 		exit();
 	}
 }

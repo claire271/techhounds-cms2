@@ -8,7 +8,7 @@ $contents = file_get_contents($file_path);
 
 if($action == "save") {
 	file_put_contents($file_path,$_POST["contents"]);
-	header( "Location: static.php?path=" . urlencode($path));
+	redirect("static.php?path=" . urlencode($path));
 }
 
 ?>

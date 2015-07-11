@@ -53,7 +53,7 @@ if(!$users) {
 				}
 				$row->write();
 		
-			    header( "Location: users.php" );
+			    redirect("users.php");
 			}
 			else if($action == "perms") {
 				$row = $users->getRow($_GET["index"]);
@@ -70,11 +70,11 @@ if(!$users) {
 				$row = $users->getRow($_GET["index"]);
 				$row->permissions = $_POST["permissions"];
 				$row->write();
-				header( "Location: users.php" );
+				redirect("users.php");
 			}
 			else if($action == "delete") {
 				$users->deleteRow($_GET["index"]);
-				header( "Location: users.php" );
+				redirect("users.php");
 			}
 			else {
 				$rows = $users->getRows();
