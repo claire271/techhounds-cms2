@@ -191,6 +191,7 @@ function patternMatch($pattern,$test) {
 
 function fatal_error() {
 	header("Location: error.php");
+	exit();
 }
 
 require(cleanPath(ROOT_DIR . "/db/db.php"));
@@ -207,11 +208,12 @@ if(defined("LOGOUT")) {
 //See if logged on already and not on main page
 else if(!defined("MAIN") && !defined("ERROR") && !isset($_SESSION["username"])) {
 	header( "Location: login.php?action=fail" );
+	exit();
 }
 //Everything else. Do general permissions checking now
 else {
 	$page = pathinfo($_SERVER['PHP_SELF'],PATHINFO_FILENAME);
-	$perms = $_SESSION["permissions"];
+	$perms = strtr($_SESSION["permissions"],array("\r\n" => "\n"));
 	$permissions = explode("\n\n",$perms);
 	for($i = 0;$i < count($permissions);$i++) {
 		$permissions[$i] = explode("\n",$permissions[$i]);
@@ -229,23 +231,32 @@ else {
 				$permissions[$i][$j]["action"] = $rest;
 			}
 			else {
-				unset($permissions[$i][$j]);
+				//unset($permissions[$i][$j]);
+				$permissions[$i][$j] = "";
 			}
 		}
-		$permissions[$i] = array_values($permissions[$i]);
+		$permissions[$i] = array_values(array_filter($permissions[$i]));
 	}
 
 	//Actually checking the permissions
 	$allowed = true;
 	foreach($permissions as $permission) {
-		$parts = explode("/",$permission[0]["action"]);
-		if(patternMatch($parts[0],$page) &&
-		   patternMatch($parts[1],$action)) {
-			$allowed = $permission[0]["allowed"];
+		if(count($permission) > 0) {
+			$parts = explode("/",$permission[0]["action"]);
+			echo "<pre>";
+			print_r($parts);
+			echo "\n";
+			echo "-" . $page . "-\n-" . $action ."-\n";
+			echo "</pre>";
+			if(patternMatch($parts[0],$page) &&
+			   patternMatch($parts[1],$action)) {
+				$allowed = $permission[0]["allowed"];
+			}
 		}
 	}
 	if(!$allowed) {
 		header("Location: permissions.php?action=denied");
+		exit();
 	}
 }
 

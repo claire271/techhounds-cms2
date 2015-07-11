@@ -17,7 +17,7 @@ $action = isset( $_GET['action'] ) ? $_GET['action'] : "";
 			<div class="banner fail">Permission Denied!</div>
 		<?php
 		} ?>
-		<textarea style="height:40em; width:90%;"><?php echo $_SESSION["permissions"]; ?></textarea>
+		<textarea style="height:40em; width:90%;" placeholder="No Permissions to Show"><?php echo $_SESSION["permissions"]; ?></textarea>
 		<br>
 		<a href="index.php">Home</a>
 	</body>
