@@ -2,13 +2,24 @@
 require("util.php");
 
 $path = cleanPath($_GET['path']);
-$file_path = ROOT_DIR . $path;
 
+//Permissions checking
+$allowed = true;
+foreach($sub_perms as $permission) {
+	if(patternMatch($permission["action"],$path,true)) {
+		$allowed = $permission["allowed"];
+	}
+}
+if(!$allowed) {
+	redirect("permissions.php?action=denied");
+}
+
+$file_path = ROOT_DIR . $path;
 $contents = file_get_contents($file_path);
 
 if($action == "save") {
 	file_put_contents($file_path,$_POST["contents"]);
-	header( "Location: static.php?path=" . urlencode($path));
+	redirect("static.php?path=" . urlencode($path));
 }
 
 ?>

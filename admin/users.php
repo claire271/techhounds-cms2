@@ -7,6 +7,23 @@ if(!$users) {
 	fatal_error();
 }
 
+//Permissions checking
+if($action == "userpass" || $action == "s_userpass" ||
+   $action == "adduser" || $action == "s_adduser" ||
+   $action == "perms" || $action == "s_perms" ||
+   $action == "delete") {
+	$row = $users->getRow($_GET["index"]);
+	$allowed = true;
+	foreach($sub_perms as $permission) {
+		if(patternMatch($permission["action"],$row->name)) {
+			$allowed = $permission["allowed"];
+		}
+	}
+	if(!$allowed) {
+		redirect("permissions.php?action=denied");
+	}
+}
+
 ?>
 <html>
 	<head>
@@ -18,34 +35,29 @@ if(!$users) {
 		<div class="body-container">
 			<h1>Users</h1>
 			<?php
-			if($action == "view" || $action == "add") {
+			if($action == "userpass" || $action == "adduser") {
 				$row = $users->getRow($_GET["index"]);
-			?>
-				<?php
-				if($action == "view") { ?>
-					User <?php echo $row->index ?><br>
-				<?php
-				}
-				?>
-				<form action="users.php?action=<?php if ($action == "view"){ echo('save&index='); echo $row->index; } else if ($action == "add"){ echo('create');} ?>" method="POST">
-					Username: <input type="text" name="username" value="<?php if ($action == "view") echo $row->name ?>"><br>
+				if($action == "userpass") {
+					echo "User " . $row->index . "<br>";
+				} ?>
+				<form action="users.php?action=<?php if ($action == "userpass"){ echo('s_userpass&index='); echo $row->index; } else if ($action == "adduser"){ echo('s_adduser');} ?>" method="POST">
+					Username: <input type="text" name="username" value="<?php if ($action == "userpass") echo $row->name ?>"><br>
 					Password: <input type="password" name="password"><br>
 					<input type="submit" value="Submit">
-				<?php if($action == "view"){ ?> <a class="button" href="users.php?action=delete&index=<?php echo $row->index ?>">Delete</a><?php } ?>
 				<a class="button" href="users.php">Cancel</a>
 				</form>
 			<?php
 			}
-			else if($action == "save" || $action == "create") {
-			  if($action == "save"){
-		        $row = $users->getRow($_GET["index"]);
-			  }
-		      else if ($action == "create"){
-		        $row = $users->createRow();
-		      }
-		      $row->name = $_POST["username"];
-
-    		  //$row->hash = hash("md5", $_POST["password"]);
+			else if($action == "s_userpass" || $action == "s_adduser") {
+				if($action == "s_userpass"){
+					$row = $users->getRow($_GET["index"]);
+				}
+				else if ($action == "s_adduser"){
+					$row = $users->createRow();
+				}
+				$row->name = $_POST["username"];
+				
+    			//$row->hash = hash("md5", $_POST["password"]);
 
 			    $row->salt = hash("sha512",mt_rand());
 			    $row->hash = $row->salt . $_POST["password"];
@@ -53,17 +65,36 @@ if(!$users) {
 				    $row->hash = hash("sha512",$row->hash);
 			    }
 
-	    	  $_SESSION["username"] = $row->name;
-		      $row->write();
+				if($action == "s_userpass") {
+	    			$_SESSION["username"] = $row->name;
+				}
+				$row->write();
 		
-			    header( "Location: users.php" );
+			    redirect("users.php");
+			}
+			else if($action == "perms") {
+				$row = $users->getRow($_GET["index"]);
+				echo "User " . $row->index . ": " . $row->name . "<br>"; ?>
+				<form action="users.php?action=s_perms&index=<?php echo $row->index ?>" method="POST">
+					Permissions:<br/>
+					<textarea name="permissions" placeholder="The permissions of this user" style="height: 30em; width: 80%;"><?php echo htmlspecialchars($row->permissions) ?></textarea><br>
+					<input type="submit" value="Submit">
+					<a class="button" href="users.php">Cancel</a>
+				</form>
+			<?php
+			}
+			else if($action == "s_perms") {
+				$row = $users->getRow($_GET["index"]);
+				$row->permissions = $_POST["permissions"];
+				$row->write();
+				redirect("users.php");
 			}
 			else if($action == "delete") {
-			  $users->deleteRow($_GET["index"]);
-		      header( "Location: users.php" );
+				$users->deleteRow($_GET["index"]);
+				redirect("users.php");
 			}
 			else {
-			  $rows = $users->getRows();
+				$rows = $users->getRows();
 			?>
 				<table>
 					<thead>
@@ -78,7 +109,9 @@ if(!$users) {
 							?>
 							<tr>
 								<th scope="row"><?php echo $row->index ?></td>
-								<td><a href="users.php?action=view&index=<?php echo $row->index ?>"><?php echo $row->name ?></a></td>
+								<td><a href="users.php?action=userpass&index=<?php echo $row->index ?>"><?php echo $row->name ?></a></td>
+								<td><a href="users.php?action=perms&index=<?php echo $row->index ?>">Permissions</a></td>
+								<td><a href="users.php?action=delete&index=<?php echo $row->index ?>">Delete</a></td>
 							</tr>
 						<?php } ?>
 					</tbody>
@@ -88,8 +121,8 @@ if(!$users) {
 			?>
 			<br>
 			<?php
-			if(!($action == "view" || $action == "add")){ ?>
-			<a class="button" href="users.php?action=add">Add User</a>
+			if(!($action == "userpass" || $action == "adduser" || $action == "perms")){ ?>
+			<a class="button" href="users.php?action=adduser">Add User</a>
 			<a class="button" href="index.php">Back</a>
 			<?php 
 			}

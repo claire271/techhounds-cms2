@@ -3,6 +3,17 @@ require("util.php");
 
 $path = isset( $_GET['path'] ) ? $_GET['path'] : "/";
 
+//Permissions checking
+$allowed = true;
+foreach($sub_perms as $permission) {
+	if(patternMatch($permission["action"],$path,true)) {
+		$allowed = $permission["allowed"];
+	}
+}
+if(!$allowed) {
+	redirect("permissions.php?action=denied");
+}
+
 $uploads_dir = ROOT_DIR . $path;
 for($i = 0;$i < count($_FILES["files"]["error"]);$i++) {
 	if($_FILES["files"]["error"][$i] == UPLOAD_ERR_OK) {

@@ -184,8 +184,38 @@ function tailCustom($filepath, $lines = 1, $adaptive = true) {
 	return trim($output);
 }
 
+function patternMatch($pattern,$test,$file_match = false) {
+	if($file_match) {
+		$pattern = cleanPath($pattern);
+		$test = cleanPath($test);
+		if(substr($pattern,0,1) == "/") {
+			return patternMatch($pattern,$test);
+		}
+		else {
+			$count = count(explode("/",$pattern));
+			$parts = explode("/",$test);
+			$test = implode("/",array_splice($parts,-$count));
+			if(substr($test,0,1) == "/") {
+				return false;
+			}
+			else {
+				return patternMatch($pattern,$test);
+			}
+		}
+	}
+	else {
+		return preg_match("#^" . strtr(preg_quote($pattern, '#'),
+									   array('\*' => '[^\/]*', '\?' => '.')) . "$#", $test);
+	}
+}
+
+function redirect($location) {
+	header("Location: " . $location);
+	exit();
+}
+
 function fatal_error() {
-	header("Location: error.php");
+	redirect("error.php");
 }
 
 require(cleanPath(ROOT_DIR . "/db/db.php"));
@@ -193,15 +223,63 @@ require(cleanPath(ROOT_DIR . "/db/db.php"));
 session_save_path(cleanPath(ADMIN_DIR . "/session"));
 session_start();
 
+$action = isset( $_GET['action'] ) ? $_GET['action'] : "";
+
 //Only for login/logout page
 if(defined("LOGOUT")) {
 	unset( $_SESSION['username'] );
 }
 //See if logged on already and not on main page
 else if(!defined("MAIN") && !defined("ERROR") && !isset($_SESSION["username"])) {
-	header( "Location: login.php?action=fail" );
+	redirect("login.php?action=fail");
 }
+//Everything else. Do general permissions checking now
+else {
+	$page = pathinfo($_SERVER['PHP_SELF'],PATHINFO_FILENAME);
+	$perms = strtr($_SESSION["permissions"],array("\r\n" => "\n"));
+	$permissions = explode("\n\n",$perms);
+	for($i = 0;$i < count($permissions);$i++) {
+		$permissions[$i] = explode("\n",$permissions[$i]);
+		for($j = 0;$j < count($permissions[$i]);$j++) {
+			$first = substr($permissions[$i][$j],0,1);
+			$rest = substr($permissions[$i][$j],1);
+			if($first == "+") {
+				$permissions[$i][$j] = array();
+				$permissions[$i][$j]["allowed"] = true;
+				$permissions[$i][$j]["action"] = $rest;
+			}
+			else if($first == "-") { 
+				$permissions[$i][$j] = array();
+				$permissions[$i][$j]["allowed"] = false;
+				$permissions[$i][$j]["action"] = $rest;
+			}
+			else {
+				//unset($permissions[$i][$j]);
+				$permissions[$i][$j] = "";
+			}
+		}
+		$permissions[$i] = array_values(array_filter($permissions[$i]));
+	}
 
-$action = isset( $_GET['action'] ) ? $_GET['action'] : "";
+	//Actually checking the permissions
+	$allowed = true;
+	$sub_perms = array();
+	foreach($permissions as $permission) {
+		if(count($permission) > 0) {
+			$parts = explode("/",$permission[0]["action"]);
+			if(patternMatch($parts[0],$page) &&
+			   patternMatch($parts[1],$action)) {
+				$allowed = $permission[0]["allowed"];
+
+				for($i = 1;$i < count($permission);$i++) {
+					array_push($sub_perms,$permission[$i]);
+				}
+			}
+		}
+	}
+	if(!$allowed) {
+		redirect("permissions.php?action=denied");
+	}
+}
 
 ?>

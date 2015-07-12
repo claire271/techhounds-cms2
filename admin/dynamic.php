@@ -3,6 +3,17 @@ require("util.php");
 
 $path = cleanPath($_GET['path']);
 
+//Permissions checking
+$allowed = true;
+foreach($sub_perms as $permission) {
+	if(patternMatch($permission["action"],$path,true)) {
+		$allowed = $permission["allowed"];
+	}
+}
+if(!$allowed) {
+	redirect("permissions.php?action=denied");
+}
+
 $pages_table = Table::open("cms2-pages");
 if(!$pages_table) {
 	error_log("cms2-pages table is missing!");
@@ -31,7 +42,7 @@ if($action == "save") {
 	file_put_contents(ROOT_DIR . $path,$output);
 	chmod(ROOT_DIR . $path,0664);
 	
-	header( "Location: dynamic.php?path=" . urlencode($path) . "&index=" . urlencode($page->index));
+	redirect("dynamic.php?path=" . urlencode($path) . "&index=" . urlencode($page->index));
 }
 
 $extension = pathinfo($path,PATHINFO_EXTENSION);
