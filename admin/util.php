@@ -195,7 +195,12 @@ function patternMatch($pattern,$test,$file_match = false) {
 			$count = count(explode("/",$pattern));
 			$parts = explode("/",$test);
 			$test = implode("/",array_splice($parts,-$count));
-			return patternMatch($pattern,$test);
+			if(substr($test,0,1) == "/") {
+				return false;
+			}
+			else {
+				return patternMatch($pattern,$test);
+			}
 		}
 	}
 	else {
@@ -274,7 +279,6 @@ else {
 	}
 	if(!$allowed) {
 		redirect("permissions.php?action=denied");
-		exit();
 	}
 }
 

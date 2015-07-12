@@ -10,6 +10,18 @@ $pages = $pages_table->getRows();
 
 $path = isset( $_GET['path'] ) ? $_GET['path'] : "/";
 $path = cleanPath($path);
+
+//Permissions checking
+$allowed = true;
+foreach($sub_perms as $permission) {
+	if(patternMatch($permission["action"],$path,true)) {
+		$allowed = $permission["allowed"];
+	}
+}
+if(!$allowed) {
+	redirect("permissions.php?action=denied");
+}
+
 $file_path = ROOT_DIR . $path;
 $files = scandir($file_path);
 
