@@ -7,6 +7,23 @@ if(!$users) {
 	fatal_error();
 }
 
+//Permissions checking
+if($action == "userpass" || $action == "s_userpass" ||
+   $action == "adduser" || $action == "s_adduser" ||
+   $action == "perms" || $action == "s_perms" ||
+   $action == "delete") {
+	$row = $users->getRow($_GET["index"]);
+	$allowed = true;
+	foreach($sub_perms as $permission) {
+		if(patternMatch($permission["action"],$row->name)) {
+			$allowed = $permission["allowed"];
+		}
+	}
+	if(!$allowed) {
+		redirect("permissions.php?action=denied");
+	}
+}
+
 ?>
 <html>
 	<head>
