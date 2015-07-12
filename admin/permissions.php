@@ -19,6 +19,7 @@ $action = isset( $_GET['action'] ) ? $_GET['action'] : "";
 		} ?>
 		<textarea style="height:40em; width:90%;" placeholder="No Permissions to Show"><?php echo $_SESSION["permissions"]; ?></textarea>
 		<br>
+		<a href="javascript:window.history.back();">Back</a>
 		<a href="index.php">Home</a>
 	</body>
 </html>
