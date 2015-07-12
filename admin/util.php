@@ -243,12 +243,17 @@ else {
 
 	//Actually checking the permissions
 	$allowed = true;
+	$sub_perms = array();
 	foreach($permissions as $permission) {
 		if(count($permission) > 0) {
 			$parts = explode("/",$permission[0]["action"]);
 			if(patternMatch($parts[0],$page) &&
 			   patternMatch($parts[1],$action)) {
 				$allowed = $permission[0]["allowed"];
+
+				for($i = 1;$i < count($permission);$i++) {
+					array_push($sub_perms,$permission[$i]);
+				}
 			}
 		}
 	}

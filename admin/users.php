@@ -93,8 +93,8 @@ if(!$users) {
 							<tr>
 								<th scope="row"><?php echo $row->index ?></td>
 								<td><a href="users.php?action=userpass&index=<?php echo $row->index ?>"><?php echo $row->name ?></a></td>
-								<td><a href="users.php?action=delete&index=<?php echo $row->index ?>">Delete</a></td>
 								<td><a href="users.php?action=perms&index=<?php echo $row->index ?>">Permissions</a></td>
+								<td><a href="users.php?action=delete&index=<?php echo $row->index ?>">Delete</a></td>
 							</tr>
 						<?php } ?>
 					</tbody>
