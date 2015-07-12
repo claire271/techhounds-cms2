@@ -184,9 +184,24 @@ function tailCustom($filepath, $lines = 1, $adaptive = true) {
 	return trim($output);
 }
 
-function patternMatch($pattern,$test) {
-	return preg_match("#^" . strtr(preg_quote($pattern, '#'),
-								   array('\*' => '[^\/]*', '\?' => '.')) . "$#", $test);
+function patternMatch($pattern,$test,$file_match = false) {
+	if($file_match) {
+		$pattern = cleanPath($pattern);
+		$test = cleanPath($test);
+		if(substr($pattern,0,1) == "/") {
+			return patternMatch($pattern,$test);
+		}
+		else {
+			$count = count(explode("/",$pattern));
+			$parts = explode("/",$test);
+			$test = implode("/",array_splice($parts,-$count));
+			return patternMatch($pattern,$test);
+		}
+	}
+	else {
+		return preg_match("#^" . strtr(preg_quote($pattern, '#'),
+									   array('\*' => '[^\/]*', '\?' => '.')) . "$#", $test);
+	}
 }
 
 function redirect($location) {
