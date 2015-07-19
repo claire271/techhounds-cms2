@@ -39,19 +39,30 @@ if($_SESSION["view"] == "simple"){
 
 			$pageInt = count($pagePaths);
 
-			if($targetInt == $pageInt + 1) {
-				for($i = 0; $i < $pageInt; $i++) {
-					if($targetPaths[$i] != $pagePaths[$i]) {
-						$has_parent = false;
+		if(basename($page->out_path) == "index.php"){
+			/*if($targetInt == $pageInt) {
+				if($targetPaths === $pagePaths){
+					//print_r($target->out_path . " & " . $page->out_path);
+					if(basename($target->out_path) == "index.php"){
+						//$has_parent = false;
+						print_r($target->out_path . " & " . $page->out_path);
 					}
 				}
-
-				if($has_parent == true){
-					if(!property_exists($page,'children')){
-						$page->children = array();
+			}*/
+				if($targetInt == $pageInt + 1) {
+					for($i = 0; $i < $pageInt; $i++) {
+						if($targetPaths[$i] != $pagePaths[$i]) {
+							$has_parent = false;
+						}
 					}
-					array_push($page->children, $target);
-					unset($pages[array_search($target,$pages)]);
+
+					if($has_parent == true){
+						if(!property_exists($page,'children')){
+							$page->children = array();
+						}
+						array_push($page->children, $target);
+						unset($pages[array_search($target,$pages)]);
+					}
 				}
 			}
 		}
