@@ -241,7 +241,7 @@ function generateHTML($depth, $page){ ?>
 			<a href="files.php?action=delete&type=dynamic&path=<?php echo dirname($page->out_path) ?>&name=<?php echo basename($page->out_path) ?>&index=<?php echo $page->index ?>" style="color:#0F0F0F">×</a>
 		</td>
 		<td>
-			<a style="padding-left:<?php echo 20 * $depth?>px;" href="dynamic.php?path=<?php echo $page->out_path ?>&index=<?php echo $page->index ?>"><?php echo basename(dirname($page->out_path)) ?>
+			<a style="padding-left:<?php echo 20 * $depth?>px;color:#<?php if(basename($page->out_path) == "index.php"){ echo "0000FF"; } else { echo "FF00FF"; }?>" href="dynamic.php?path=<?php echo $page->out_path ?>&index=<?php echo $page->index ?>"><?php if(basename($page->out_path) == "index.php"){ echo basename(dirname($page->out_path)); } else { echo basename($page->out_path); } ?></a>
 		</td>
 	</tr>
 	<?php
@@ -344,7 +344,7 @@ function generateHTML($depth, $page){ ?>
 										<a href="files.php?action=delete&type=dynamic&path=<?php echo dirname($page->out_path) ?>&name=<?php echo basename($page->out_path) ?>&index=<?php echo $page->index ?>" style="color:#0F0F0F">×</a>
 									</td>
 									<td>
-										<a href="dynamic.php?path=<?php echo $page->out_path ?>&index=<?php echo $page->index ?>"><?php echo basename(dirname($page->out_path)) ?>
+										<a style="padding-left:<?php echo 20 * $depth?>px;color:#<?php if(basename($page->out_path) == "index.php"){ echo "0000FF"; } else { echo "FF00FF"; }?>" href="dynamic.php?path=<?php echo $page->out_path ?>&index=<?php echo $page->index ?>"><?php if(basename($page->out_path) == "index.php"){ echo basename(dirname($page->out_path)); } else { echo basename($page->out_path); } ?></a>
 									</td>
 								</tr>
 							<?php
