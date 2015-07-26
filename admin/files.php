@@ -72,23 +72,6 @@ if($_SESSION["view"] == "simple"){
 					}
 				}
 			}
-/*
-			if(basename($target->out_path) != "index.php"){
-				if($targetInt == $pageInt) {
-					if($targetPaths !== $pagePaths){
-						$has_parent = false;
-					}
-
-					if($has_parent == true){
-						if(!property_exists($page,'children')){
-							$page->children = array();
-						}
-						array_push($page->children, $target);
-						unset($pages[array_search($target,$pages)]);
-					}
-				}
-			}
-*/
 		}
 	}
 }
@@ -344,7 +327,7 @@ function generateHTML($depth, $page){ ?>
 										<a href="files.php?action=delete&type=dynamic&path=<?php echo dirname($page->out_path) ?>&name=<?php echo basename($page->out_path) ?>&index=<?php echo $page->index ?>" style="color:#0F0F0F">×</a>
 									</td>
 									<td>
-										<a style="padding-left:<?php echo 20 * $depth?>px;color:#<?php if(basename($page->out_path) == "index.php"){ echo "0000FF"; } else { echo "FF00FF"; }?>" href="dynamic.php?path=<?php echo $page->out_path ?>&index=<?php echo $page->index ?>"><?php if(basename($page->out_path) == "index.php"){ echo basename(dirname($page->out_path)); } else { echo basename($page->out_path); } ?></a>
+										<a style="color:#<?php if(basename($page->out_path) == "index.php"){ echo "0000FF"; } else { echo "FF00FF"; }?>" href="dynamic.php?path=<?php echo $page->out_path ?>&index=<?php echo $page->index ?>"><?php if($page->out_path == "/index.php") { echo "Home"; } else if(basename($page->out_path) == "index.php"){ echo basename(dirname($page->out_path)); } else { echo basename($page->out_path); } ?></a>
 									</td>
 								</tr>
 							<?php
