@@ -56,7 +56,23 @@ if($_SESSION["view"] == "simple"){
 						unset($pages[array_search($target,$pages)]);
 					}
 				}
+				else if($targetInt == $pageInt) {
+					if(basename($target->out_path) != "index.php") {
+						if($targetPaths !== $pagePaths){
+							$has_parent = false;
+						}
+						
+						if($has_parent == true){
+							if(!property_exists($page,'children')){
+								$page->children = array();
+							}
+							array_push($page->children, $target);
+							unset($pages[array_search($target,$pages)]);
+						}
+					}
+				}
 			}
+/*
 			if(basename($target->out_path) != "index.php"){
 				if($targetInt == $pageInt) {
 					if($targetPaths !== $pagePaths){
@@ -72,6 +88,7 @@ if($_SESSION["view"] == "simple"){
 					}
 				}
 			}
+*/
 		}
 	}
 }
