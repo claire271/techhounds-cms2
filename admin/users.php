@@ -116,17 +116,13 @@ if($action == "userpass" || $action == "s_userpass" ||
 						<?php } ?>
 					</tbody>
 				</table>
-			<?php
-			}
-			?>
+			<?php } ?>
 			<br>
 			<?php
 			if(!($action == "userpass" || $action == "adduser" || $action == "perms")){ ?>
 			<a class="button" href="users.php?action=adduser">Add User</a>
 			<a class="button" href="index.php">Back</a>
-			<?php 
-			}
-			?>
+			<?php }	?>
 		</div>
 	</body>
 </html>
