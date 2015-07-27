@@ -2,6 +2,7 @@
 //Utility functions and declarations first
 define("ROOT_DIR",cleanPath($_SERVER['DOCUMENT_ROOT']));
 define("ADMIN_DIR",cleanPath(dirname(__FILE__)));
+define("ADMIN_RDIR",cleanPath("/" . implode("/",array_diff(explode("/",ADMIN_DIR),explode("/",ROOT_DIR)))));
 
 ini_set("log_errors", 1);
 ini_set("error_log", cleanPath(ADMIN_DIR . "/error.log"));
@@ -219,6 +220,7 @@ function fatal_error() {
 }
 
 require(cleanPath(ROOT_DIR . "/db/db.php"));
+require(cleanPath(ROOT_DIR . "/parsedown/Parsedown.php"));
 
 session_save_path(cleanPath(ADMIN_DIR . "/session"));
 session_start();
