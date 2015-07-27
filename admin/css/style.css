@@ -26,6 +26,10 @@ input {
 	line-height: inherit;
 }
 
+a {
+	color: inherit;
+}
+
 hr {
 	margin-top:20px;
 	margin-bottom:20px;

@@ -276,13 +276,13 @@ function generateHTML($depth, $page){ ?>
 					?>
 						<tr style="background-color: #F7F7F7">
 							<td class="delete">
-								<a href="files.php?action=delete&type=dir&path=<?php echo urlencode($path) ?>&name=<?php echo urlencode($file->name) ?>">×</a>
+								<a href="files.php?action=delete&type=dir&path=<?php echo urlencode($path) ?>&name=<?php echo urlencode($file->name) ?>" style="color:#0F0F0F">×</a>
 							</td>
 							<td>
 								<a href="files.php?path=<?php echo urlencode($new_path) ?>" style="color:#0000FF"><?php echo $file->name ?></a><br>
 							</td>
 							<td class="delete">
-								<a href="javascript:setRCParams('<?php echo urlencode($new_path) ?>');">R/C</a>
+								<a href="javascript:setRCParams('<?php echo urlencode($new_path) ?>');" style="color:#0F0F0F">R/C</a>
 							</td>
 						</tr>
 					<?php
@@ -291,13 +291,13 @@ function generateHTML($depth, $page){ ?>
 					?>
 						<tr>
 							<td class="delete">
-								<a href="files.php?action=delete&type=static&path=<?php echo urlencode($path) ?>&name=<?php echo urlencode($file->name) ?>">×</a>
+								<a href="files.php?action=delete&type=static&path=<?php echo urlencode($path) ?>&name=<?php echo urlencode($file->name) ?>" style="color:#0F0F0F">×</a>
 							</td>
 							<td>
 								<a href="static.php?path=<?php echo urlencode($new_path) ?>" style="color:#FF0000"><?php echo $file->name ?></a><br>
 							</td>
 							<td class="delete">
-								<a href="javascript:setRCParams('<?php echo urlencode($new_path) ?>');">R/C</a>
+								<a href="javascript:setRCParams('<?php echo urlencode($new_path) ?>');" style="color:#0F0F0F">R/C</a>
 							</td>
 						</tr>
 					<?php
@@ -306,13 +306,13 @@ function generateHTML($depth, $page){ ?>
 					?>
 						<tr>
 							<td class="delete">
-								<a href="files.php?action=delete&type=dynamic&path=<?php echo urlencode($path) ?>&name=<?php echo urlencode($file->name) ?>&index=<?php echo urlencode($file->index) ?>">×</a>
+								<a href="files.php?action=delete&type=dynamic&path=<?php echo urlencode($path) ?>&name=<?php echo urlencode($file->name) ?>&index=<?php echo urlencode($file->index) ?>" style="color:#0F0F0F">×</a>
 							</td>
 							<td>
 								<a href="dynamic.php?path=<?php echo urlencode($new_path) ?>&index=<?php echo urlencode($file->index) ?>" style="color:#FF00FF"><?php echo $file->name ?></a><br>
 							</td>
 							<td class="delete">
-								<a href="javascript:setRCParams('<?php echo urlencode($new_path) ?>');">R/C</a>
+								<a href="javascript:setRCParams('<?php echo urlencode($new_path) ?>');" style="color:#0F0F0F">R/C</a>
 							</td>
 						</tr>
 					<?php
