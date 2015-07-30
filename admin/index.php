@@ -248,6 +248,7 @@ if($action == "regendoc") {
 			file_put_contents($out_name,$out);
 		}
 	}
+	redirect("index.php");
 }
 
 ?>
@@ -278,6 +279,7 @@ if($action == "regendoc") {
 			<a href="error.php">View Errors</a><br>
 			<a href="permissions.php">View Permissions</a><br>
 			<a href="doc/index.php">View Documentation</a><br>
+			<a href="files.php?path=<?php echo ADMIN_RDIR ?>/doc/">Edit Documentation</a><br>
 			<a href="index.php?action=regendoc">Regenerate All Documentation</a><br>
 		</div>
 	</body>
