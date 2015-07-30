@@ -93,6 +93,7 @@ $extension = pathinfo($path,PATHINFO_EXTENSION);
 			editor.getSession().setValue(textarea.val());
 
 			if(mode == "js") mode = "javascript";
+			if(mode == "md") mode = "markdown";
 			if(mode == "csv") editor.getSession().setUseSoftTabs(false);
 			editor.getSession().setMode("ace/mode/" + mode);
 			//editor.setKeyboardHandler("ace/keyboard/emacs");

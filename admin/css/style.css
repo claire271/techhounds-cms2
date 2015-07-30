@@ -28,7 +28,6 @@ input {
 
 a {
 	color: inherit;
-	text-decoration: none;
 }
 
 hr {
@@ -197,8 +196,11 @@ td.delete {
 	text-align: center;
 }
 
-td.delete > a {
+td > a {
 	text-decoration: none;
+}
+
+td.delete > a {
 	display: block;
 	border-radius: 4px;
 	padding: 1px 0;

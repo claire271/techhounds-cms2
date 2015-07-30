@@ -220,6 +220,36 @@ if($action == "restore") {
 	redirect("index.php");
 }
 
+if($action == "regendoc") {
+	$path = cleanPath(ADMIN_DIR . "/doc/");
+	$objects = new RecursiveIteratorIterator(new RecursiveDirectoryIterator($path));
+	foreach($objects as $name => $object){
+		$extension = pathinfo($name,PATHINFO_EXTENSION);
+		if($extension == "md") {
+			$out_name = substr($name,0,strrpos($name,".")) . ".php";
+			$input = file_get_contents($name);
+			$Parsedown = new Parsedown();
+			$output = $Parsedown->text($input);
+			$util_path = cleanPath(ADMIN_DIR . "/util.php");
+			$css_path = cleanPath(ADMIN_RDIR . "/css/style.css");
+			$out = "<?php require(\"$util_path\");?>" . "\n" .
+				   '<html>' .  "\n" .
+				   '  <head>' . "\n" .
+				   '    <meta charset="utf-8">' . "\n" .
+				   '    <title>Documentation</title>' . "\n" .
+				   "    <link rel=\"stylesheet\" type=\"text/css\" href=\"$css_path\">" . "\n" .
+				   '  </head>' . "\n" .
+				   '  <body>' . "\n" .
+				   '    <div class="body-container">' . "\n" .
+				   $output . "\n" .
+				   '    </div>' . "\n" .
+				   '  </body>' . "\n" .
+				   '</html>' . "\n";
+			file_put_contents($out_name,$out);
+		}
+	}
+}
+
 ?>
 <html>
 	<head>
@@ -251,7 +281,10 @@ if($action == "restore") {
 			</form>
 			<hr>
 			<a href="error.php">View Errors</a><br>
-			<a href="permissions.php">View Permissions</a>
+			<hr>
+			<a href="permissions.php">View Permissions</a><br>
+			<a href="doc/index.php">View Documentation</a><br>
+			<a href="index.php?action=regendoc">Regenerate All Documentation</a><br>
 		</div>
 	</body>
 </html>
