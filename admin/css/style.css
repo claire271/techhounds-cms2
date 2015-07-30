@@ -28,6 +28,7 @@ input {
 
 a {
 	color: inherit;
+	text-decoration: none;
 }
 
 hr {
@@ -58,6 +59,7 @@ hr {
 .body-container {
 	width: 800px;
 	margin: auto;
+	position: relative;
 }
 
 /*
@@ -181,6 +183,10 @@ th {
 	text-align: left;
 }
 
+tr:hover {
+	background-color: #f7fbfc !important;
+}
+
 table > tbody > tr > td,
 table > tbody > tr > th {
 	border-top: 1px solid #ccc;
@@ -201,4 +207,40 @@ td.delete > a {
 
 td.delete > a:hover {
 	background-color: #CECECE;
+}
+
+/*
+  Pill Stuff
+*/
+
+.pill {
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding: 0;
+	margin: 0;
+	border-bottom: 1px solid #ccc;
+	border-left: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	border-radius: 0 0 4px 4px;
+}
+
+.pill li {
+	list-style: none;
+}
+
+.pill .button {
+	border: 0;
+	padding: 4px 10px;
+	border-radius: 0 0 4px 0;
+	border-left: 1px solid #ccc;
+}
+
+.pill .left {
+	float: left;
+	padding: 4px 10px;
+}
+
+.pill .right {
+	float: right;
 }
