@@ -261,12 +261,16 @@ if($action == "regendoc") {
 	<body>
 		<div class="body-container">
 			<h1>Admin</h1>
-			<p>Logged in as <b><?php echo isset($_SESSION["username"]) ? $_SESSION["username"] : "" ?></b></p>
-			<a href="login.php?action=logout">Logout</a><br>
-			<a href="users.php">Users</a><br>
+			<ul class="pill">
+				<li class="left">Logged in as <b><?php echo isset($_SESSION["username"]) ? $_SESSION["username"] : "" ?></b>!</li>
+				<li class="right"><a class="button" href="login.php?action=logout">Logout</a></li>
+			</ul>
+			<a href="users.php">User Management</a>
+			<hr>
 			<a href="files.php">File Explorer</a><br>
 			<a href="index.php?action=purge">Purge All Files</a><br>
-			<a href="index.php?action=regenerate">Regenerate All Files</a><br>
+			<a href="index.php?action=regenerate">Regenerate All Files</a>
+			<hr>
 			<a href="index.php?action=hash">Generate File Hashes</a><br>
 			<form action="index.php?action=backup" method="POST" enctype="multipart/form-data">
 				<input name="hash" type="file"/><br />
@@ -276,7 +280,9 @@ if($action == "regendoc") {
 				<input name="backup" type="file"/><br />
 				<input type="submit" value="Restore Backup"/>
 			</form>
+			<hr>
 			<a href="error.php">View Errors</a><br>
+			<hr>
 			<a href="permissions.php">View Permissions</a><br>
 			<a href="doc/index.php">View Documentation</a><br>
 			<a href="files.php?path=<?php echo ADMIN_RDIR ?>/doc/">Edit Documentation</a><br>
