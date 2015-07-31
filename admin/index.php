@@ -284,6 +284,7 @@ if($action == "regendoc") {
 			<a href="error.php">View Errors</a><br>
 			<hr>
 			<a href="permissions.php">View Permissions</a><br>
+			<hr>
 			<a href="doc/index.php">View Documentation</a><br>
 			<a href="files.php?path=<?php echo ADMIN_RDIR ?>/doc/">Edit Documentation</a><br>
 			<a href="index.php?action=regendoc">Regenerate All Documentation</a><br>

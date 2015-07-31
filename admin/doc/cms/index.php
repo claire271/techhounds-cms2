@@ -9,7 +9,8 @@
     <div class="body-container">
 <h1>TechHOUNDS-CMS2 Documentation</h1>
 <p><a href="templating.php">Templating</a><br>
-<a href="permissions.php">Permissions</a></p>
+<a href="permissions.php">Permissions</a><br>
+<a href="backup.php">Backups and Restores</a></p>
 <p><a href="..">Back</a>
 <a href="../..">Admin Home</a></p>
     </div>
