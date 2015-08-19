@@ -14,14 +14,15 @@ if($_SESSION["view"] == "simple"){
 		$pageInt = count($pagePaths);
 		$page->exploded_path = $pageInt;
 	}
-	usort($pages, function($a, $b) {
+	function sort_simple_view($a, $b) {
 		$a = $a->exploded_path;
 		$b = $b->exploded_path;
 		if ($a == $b) {
 			return 0;
 		}
 		return ($a < $b) ? 1 : -1;
-	});
+	}
+	usort($pages,sort_simple_view);
 	$pages2 = array();
 	$pages2 = $pages;
 	//Check if the target page has a parent
@@ -220,11 +221,12 @@ else if($action == "switchview") {
 function checkForChildren($depth, $page) {
 	if(property_exists($page, 'children')) {
 		$children = $page->children;
-		usort($children, function($a, $b) {
+		function sort_check_children($a, $b) {
 			$a = basename(dirname($a->out_path));
 			$b = basename(dirname($b->out_path));
 			return strcmp($a, $b);
-		});
+		}
+		usort($children, sort_check_children);
 		foreach($children as $child){
 			generateHTML($depth+1, $child);
 		}
@@ -334,11 +336,12 @@ function generateHTML($depth, $page){ ?>
 					</thead>
 					<tbody>
 					<?php
-					usort($pages, function($a, $b) {
+					function sort_display($a, $b) {
 						$a = basename(dirname($a->out_path));
 						$b = basename(dirname($b->out_path));
 						return strcmp($a, $b);
-					});
+					}
+					usort($pages,sort_display);
 					foreach($pages as $page) {
 						$depth = 0;
 					?>
