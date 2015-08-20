@@ -63,6 +63,7 @@ if($action == "save") {
 			var editor = ace.edit(editDiv[0]);
 			//editor.renderer.setShowGutter(false);
 			editor.getSession().setValue(textarea.val());
+			editor.getSession().setUseWrapMode(true);
 
 			if(mode == "js") mode = "javascript";
 			if(mode == "md") mode = "markdown";
