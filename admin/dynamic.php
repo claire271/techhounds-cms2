@@ -95,7 +95,10 @@ $extension = pathinfo($path,PATHINFO_EXTENSION);
 
 			if(mode == "js") mode = "javascript";
 			if(mode == "md") mode = "markdown";
-			if(mode == "csv") editor.getSession().setUseSoftTabs(false);
+			if(mode == "csv") {
+				editor.getSession().setUseSoftTabs(false);
+				editor.getSession().setUseWrapMode(false);
+			}
 			editor.getSession().setMode("ace/mode/" + mode);
 			//editor.setKeyboardHandler("ace/keyboard/emacs");
 			editor.setTheme("ace/theme/chrome");
