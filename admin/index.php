@@ -49,8 +49,14 @@ if($action == "purge") {
 
 if($action == "regenerate") {
 	foreach($pages as $page) {
-		$template = file_get_contents(cleanPath(ROOT_DIR . $page->template_path));
-		$output = template_match($template,"template_replace",$page);
+		if($page->template_path != "") {
+			$template = file_get_contents(cleanPath(ROOT_DIR . $page->template_path));
+			$output = template_match($template,"template_replace",$page);
+		}
+		else {
+			$output = template_match($page->body,"template_replace",$page);
+		}
+		$output = template_match($output,"template_clear",$page);
 		
 		file_put_contents(ROOT_DIR . $page->out_path,$output);
 		chmod(ROOT_DIR . $page->out_path,0664);
