@@ -6,6 +6,7 @@ if(!$pages_table) {
 	fatal_error();
 }
 $pages = $pages_table->getRows();
+$pages_rcd = $pages_table->getRows();
 
 if($_SESSION["view"] == "simple"){
 	foreach($pages as $page){
@@ -115,6 +116,66 @@ foreach($pages as $page) {
 	}
 }
 
+//Recursive rename, copy, and delete
+function rcd($input,$output,$action,$pages,$pages_table) {
+	$in_path = cleanPath(ROOT_DIR . "/" . $input);
+	$out_path = cleanPath(ROOT_DIR . "/" . $output);
+	echo $in_path . "<br>";
+	if(is_dir($in_path)) {
+		echo "DIR";
+	}
+	else {
+		echo "FILE";
+		echo $input;
+
+		$d_page = null;
+		foreach($pages as $page) {
+			if(cleanPath($page->out_path) === (cleanPath($input))) {
+				$d_page = $page;
+				echo "HI";
+			}
+		}
+
+		if($action == "copy") {
+			if($d_page === null) {
+				copy($in_path,$out_path);
+			}
+			else {
+				copy($in_path,$out_path);
+				$page_out = $pages_table->createRow();
+				$page_out->out_path = cleanPath($output);
+				$page_out->template_path = $d_page->template_path;
+				$page_out->params = $d_page->params;
+				$page_out->body = $d_page->body;
+				$page_out->date = $d_page->date;
+				$page_out->write();
+			}
+		}
+		else if($action == "rename") {
+			if($d_page === null) {
+				rename($in_path,$out_path);
+			}
+			else {
+				rename($in_path,$out_path);
+				$d_page->out_path = cleanPath($output);
+				$d_page->write();
+			}
+		}
+		else if($action == "delete") {
+			if($d_page === null) {
+				unlink($in_path);
+			}
+			else {
+				if(file_exists($in_path)) {
+					unlink($in_path);
+				}
+				$pages_table->deleteRow($d_page->index);
+			}
+		}
+		print_r($d_page);
+	}
+}
+
 if($action == "delete") {
 	if($_GET["type"] == "dir") {
 		$real_path = cleanPath($file_path . "/" . $_GET["name"]);
@@ -168,7 +229,15 @@ else if($action == "newdynamic") {
 		redirect("files.php?path=" . urlencode($path));
 	}
 }
-else if($action == "roc") {
+else if($action == "rcd") {
+	$type = $_POST["type"];
+	if($type == "Recursive Rename File/Dir") $type = "rename";
+	if($type == "Recursive Copy File/Dir") $type = "copy";
+	if($type == "Recursive Delete File/Dir") $type = "delete";
+	$in = $_POST["in"];
+	$out = $_POST["out"];
+	rcd($in,$out,$type,$pages_rcd,$pages_table);
+/*
 	$rename = $_POST["type"] == "Rename File/Dir";
 	$in = $_POST["in"];
 	$out = $_POST["out"];
@@ -205,6 +274,7 @@ else if($action == "roc") {
 			break;
 		}
 	}
+*/
 	redirect("files.php?path=" . urlencode($path));
 }
 else if($action == "switchview") {
@@ -375,11 +445,12 @@ function generateHTML($depth, $page){ ?>
 					<input type="text" name="name">
 					<input type="submit" value="Create Dynamic File">
 				</form>
-				<form action="files.php?action=roc&path=<?php echo urlencode($path) ?>" method="POST">
-					IN: <input id="rcin" type="text" name="in" value="<?php echo $path ?>"><br/>
-					OUT: <input id="rcout" type="text" name="out" value="<?php echo $path ?>"><br/>
-					<input name="type" type="submit" value="Rename File/Dir">
-					<input name="type" type="submit" value="Copy File/Dir">
+				<form action="files.php?action=rcd&path=<?php echo urlencode($path) ?>" method="POST">
+					IN: <input id="rcdin" type="text" name="in" value="<?php echo $path ?>"><br/>
+					OUT: <input id="rcdout" type="text" name="out" value="<?php echo $path ?>"><br/>
+					<input name="type" type="submit" value="Recursive Rename File/Dir">
+					<input name="type" type="submit" value="Recursive Copy File/Dir">
+					<input name="type" type="submit" value="Recursive Delete File/Dir">
 				</form>
 			<?php
 			}
@@ -418,8 +489,8 @@ function generateHTML($depth, $page){ ?>
 	</body>
 	<script type="text/javascript">
 	function setRCParams(name) {
-		document.getElementById("rcin").value = name;
-		document.getElementById("rcout").value = name;
+		document.getElementById("rcdin").value = name;
+		document.getElementById("rcdout").value = name;
 	}
 	window.onload = function() {
 		var input = document.getElementById("viewInput");
