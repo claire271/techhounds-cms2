@@ -27,7 +27,7 @@ if($_SESSION["view"] == "simple"){
 		}
 		return ($a < $b) ? 1 : -1;
 	}
-	usort($pages,sort_simple_view);
+	usort($pages,"sort_simple_view");
 	$pages2 = array();
 	$pages2 = $pages;
 	//Check if the target page has a parent
@@ -268,15 +268,15 @@ else if($action == "switchview") {
 	}
 	redirect("files.php");
 }
+function sort_check_children($a, $b) {
+	$a = basename(dirname($a->out_path));
+	$b = basename(dirname($b->out_path));
+	return strcmp($a, $b);
+}
 function checkForChildren($depth, $page) {
 	if(property_exists($page, 'children')) {
 		$children = $page->children;
-		function sort_check_children($a, $b) {
-			$a = basename(dirname($a->out_path));
-			$b = basename(dirname($b->out_path));
-			return strcmp($a, $b);
-		}
-		usort($children, sort_check_children);
+		usort($children, "sort_check_children");
 		foreach($children as $child){
 			generateHTML($depth+1, $child);
 		}
@@ -391,7 +391,7 @@ function generateHTML($depth, $page){ ?>
 						$b = basename(dirname($b->out_path));
 						return strcmp($a, $b);
 					}
-					usort($pages,sort_display);
+					usort($pages,"sort_display");
 					foreach($pages as $page) {
 						$depth = 0;
 					?>
