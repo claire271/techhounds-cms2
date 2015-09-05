@@ -122,17 +122,32 @@ function rcd($input,$output,$action,$pages,$pages_table) {
 	$out_path = cleanPath(ROOT_DIR . "/" . $output);
 	echo $in_path . "<br>";
 	if(is_dir($in_path)) {
-		echo "DIR";
+		if($action == "copy" || $action == "rename") {
+			mkdir($out_path);
+			chmod($out_path,0775);
+		}
+
+		$files = scandir($in_path);
+		foreach($pages as $page) {
+			if(dirname(cleanPath($page->out_path)) === (cleanPath($input))) {
+				array_push($files,basename(cleanPath($page->out_path)));
+			}
+		}
+		foreach($files as $file) {
+			if($file != "." && $file != "..") {
+				rcd(cleanPath($input . "/" . $file),cleanPath($output . "/" . $file),$action,$pages,$pages_table);
+			}
+		}
+
+		if($action == "rename" || $action == "delete") {
+			rmdir($in_path);
+		}
 	}
 	else {
-		echo "FILE";
-		echo $input;
-
 		$d_page = null;
 		foreach($pages as $page) {
 			if(cleanPath($page->out_path) === (cleanPath($input))) {
 				$d_page = $page;
-				echo "HI";
 			}
 		}
 
@@ -172,7 +187,6 @@ function rcd($input,$output,$action,$pages,$pages_table) {
 				$pages_table->deleteRow($d_page->index);
 			}
 		}
-		print_r($d_page);
 	}
 }
 
@@ -237,44 +251,6 @@ else if($action == "rcd") {
 	$in = $_POST["in"];
 	$out = $_POST["out"];
 	rcd($in,$out,$type,$pages_rcd,$pages_table);
-/*
-	$rename = $_POST["type"] == "Rename File/Dir";
-	$in = $_POST["in"];
-	$out = $_POST["out"];
-	foreach($files as $file) {
-		if($file->name != ".." && $file->name != "." && $file->name == basename($in)) {
-			if($file->flag == "static" || $file->flag == "dir") {
-				if($rename) {
-					rename(cleanPath(ROOT_DIR . $in),cleanPath(ROOT_DIR . $out));
-				}
-				else {
-					copy(cleanPath(ROOT_DIR . $in),cleanPath(ROOT_DIR . $out));
-				}
-			}
-			else if($file->flag == "dynamic") {
-				if($rename) {
-					rename(cleanPath(ROOT_DIR . $in),cleanPath(ROOT_DIR . $out));
-					$page = $pages_table->getRow($file->index);
-					$page->out_path = cleanPath($out);
-					$page->write();
-				}
-				else {
-					copy(cleanPath(ROOT_DIR . $in),cleanPath(ROOT_DIR . $out));
-					$page_in = $pages_table->getRow($file->index);
-					$page_out = $pages_table->createRow();
-					$page_out->out_path = cleanPath($out);
-					$page_out->template_path = $page_in->template_path;
-					$page_out->params = $page_in->params;
-					$page_out->body = $page_in->body;
-					$page_out->date = $page_in->date;
-					$page_in->write();
-					$page_out->write();
-				}
-			}
-			break;
-		}
-	}
-*/
 	redirect("files.php?path=" . urlencode($path));
 }
 else if($action == "switchview") {
