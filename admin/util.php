@@ -1,8 +1,10 @@
 <?php
 //Utility functions and declarations first
 define("ROOT_DIR",cleanPath($_SERVER['DOCUMENT_ROOT']));
-define("ADMIN_DIR",cleanPath(dirname(__FILE__)));
-define("ADMIN_RDIR",cleanPath("/" . implode("/",array_diff(explode("/",ADMIN_DIR),explode("/",ROOT_DIR)))));
+//define("ADMIN_DIR",cleanPath(dirname(__FILE__)));
+//define("ADMIN_RDIR",cleanPath("/" . implode("/",array_diff(explode("/",ADMIN_DIR),explode("/",ROOT_DIR)))));
+define("ADMIN_RDIR",cleanPath("/admin/"));
+define("ADMIN_DIR",cleanPath(ROOT_DIR . "/" . ADMIN_RDIR));
 
 ini_set("log_errors", 1);
 ini_set("error_log", cleanPath(ADMIN_DIR . "/error.log"));
@@ -222,65 +224,67 @@ function fatal_error() {
 require(cleanPath(ROOT_DIR . "/db/db.php"));
 require(cleanPath(ROOT_DIR . "/parsedown/Parsedown.php"));
 
-session_save_path(cleanPath(ADMIN_DIR . "/session"));
-session_start();
+if(!defined("NON-SECURED")) {
+	session_save_path(cleanPath(ADMIN_DIR . "/session"));
+	session_start();
 
-$action = isset( $_GET['action'] ) ? $_GET['action'] : "";
+	$action = isset( $_GET['action'] ) ? $_GET['action'] : "";
 
-//Only for login/logout page
-if(defined("LOGOUT")) {
-	unset( $_SESSION['username'] );
-}
-//See if logged on already and not on main page
-else if(!defined("MAIN") && !defined("ERROR") && !isset($_SESSION["username"])) {
-	redirect("login.php?action=fail");
-}
-//Everything else. Do general permissions checking now
-else {
-	$page = pathinfo($_SERVER['PHP_SELF'],PATHINFO_FILENAME);
-	$perms = strtr($_SESSION["permissions"],array("\r\n" => "\n"));
-	$permissions = explode("\n\n",$perms);
-	for($i = 0;$i < count($permissions);$i++) {
-		$permissions[$i] = explode("\n",$permissions[$i]);
-		for($j = 0;$j < count($permissions[$i]);$j++) {
-			$first = substr($permissions[$i][$j],0,1);
-			$rest = substr($permissions[$i][$j],1);
-			if($first == "+") {
-				$permissions[$i][$j] = array();
-				$permissions[$i][$j]["allowed"] = true;
-				$permissions[$i][$j]["action"] = $rest;
-			}
-			else if($first == "-") { 
-				$permissions[$i][$j] = array();
-				$permissions[$i][$j]["allowed"] = false;
-				$permissions[$i][$j]["action"] = $rest;
-			}
-			else {
-				//unset($permissions[$i][$j]);
-				$permissions[$i][$j] = "";
-			}
-		}
-		$permissions[$i] = array_values(array_filter($permissions[$i]));
+	//Only for login/logout page
+	if(defined("LOGOUT")) {
+		unset( $_SESSION['username'] );
 	}
+	//See if logged on already and not on main page
+	else if(!defined("MAIN") && !defined("ERROR") && !isset($_SESSION["username"])) {
+		redirect("login.php?action=fail");
+	}
+	//Everything else. Do general permissions checking now
+	else {
+		$page = pathinfo($_SERVER['PHP_SELF'],PATHINFO_FILENAME);
+		$perms = strtr($_SESSION["permissions"],array("\r\n" => "\n"));
+		$permissions = explode("\n\n",$perms);
+		for($i = 0;$i < count($permissions);$i++) {
+			$permissions[$i] = explode("\n",$permissions[$i]);
+			for($j = 0;$j < count($permissions[$i]);$j++) {
+				$first = substr($permissions[$i][$j],0,1);
+				$rest = substr($permissions[$i][$j],1);
+				if($first == "+") {
+					$permissions[$i][$j] = array();
+					$permissions[$i][$j]["allowed"] = true;
+					$permissions[$i][$j]["action"] = $rest;
+				}
+				else if($first == "-") { 
+					$permissions[$i][$j] = array();
+					$permissions[$i][$j]["allowed"] = false;
+					$permissions[$i][$j]["action"] = $rest;
+				}
+				else {
+					//unset($permissions[$i][$j]);
+					$permissions[$i][$j] = "";
+				}
+			}
+			$permissions[$i] = array_values(array_filter($permissions[$i]));
+		}
 
-	//Actually checking the permissions
-	$allowed = true;
-	$sub_perms = array();
-	foreach($permissions as $permission) {
-		if(count($permission) > 0) {
-			$parts = explode("/",$permission[0]["action"]);
-			if(patternMatch($parts[0],$page) &&
-			   patternMatch($parts[1],$action)) {
-				$allowed = $permission[0]["allowed"];
+		//Actually checking the permissions
+		$allowed = true;
+		$sub_perms = array();
+		foreach($permissions as $permission) {
+			if(count($permission) > 0) {
+				$parts = explode("/",$permission[0]["action"]);
+				if(patternMatch($parts[0],$page) &&
+				   patternMatch($parts[1],$action)) {
+					$allowed = $permission[0]["allowed"];
 
-				for($i = 1;$i < count($permission);$i++) {
-					array_push($sub_perms,$permission[$i]);
+					for($i = 1;$i < count($permission);$i++) {
+						array_push($sub_perms,$permission[$i]);
+					}
 				}
 			}
 		}
-	}
-	if(!$allowed) {
-		redirect("permissions.php?action=denied");
+		if(!$allowed) {
+			redirect("permissions.php?action=denied");
+		}
 	}
 }
 
