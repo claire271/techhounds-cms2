@@ -214,7 +214,7 @@ if($action == "delete") {
 }
 else if($action == "newdir") {
 	$real_path = cleanPath($file_path . "/" . $_POST["name"]);
-	mkdir($out_path,0775,true);
+	mkdir($real_path,0775,true);
 	chmod($real_path,0775);
 	redirect("files.php?path=" . urlencode($path));
 }
