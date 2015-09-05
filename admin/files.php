@@ -233,7 +233,8 @@ else if($action == "newdynamic") {
 	$page = $pages_table->createRow();
 	if($_SESSION["view"] == "simple"){
 		$parent = $_POST["parent"];
-		$real_path = cleanPath(ROOT_PATH . $parent . $_POST["name"]);
+		$real_path = cleanPath(ROOT_DIR . $parent . $_POST["name"]);
+		echo $real_path;
 		if (!file_exists($real_path)) {
 			mkdir($real_path, 0775, true);
 		}
