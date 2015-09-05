@@ -8,6 +8,10 @@ if(!$pages_table) {
 $pages = $pages_table->getRows();
 $pages_rcd = $pages_table->getRows();
 
+if(!isset($_SESSION["view"])) {
+	$_SESSION["view"] = "advanced";
+}
+
 if($_SESSION["view"] == "simple"){
 	foreach($pages as $page){
 		$pagePaths = explode("/",dirname($page->out_path));
