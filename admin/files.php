@@ -430,9 +430,9 @@ function generateHTML($depth, $page){ ?>
 				<form action="files.php?action=rcd&path=<?php echo urlencode($path) ?>" method="POST">
 					IN: <input id="rcdin" type="text" name="in" value="<?php echo $path ?>"><br/>
 					OUT: <input id="rcdout" type="text" name="out" value="<?php echo $path ?>"><br/>
-					<input name="type" type="submit" value="Recursive Rename File/Dir">
-					<input name="type" type="submit" value="Recursive Copy File/Dir">
-					<input name="type" type="submit" value="Recursive Delete File/Dir">
+					<input name="type" type="submit" value="Recursive Rename File/Dir" id="rcd-r">
+					<input name="type" type="submit" value="Recursive Copy File/Dir" id="rcd-c">
+					<input name="type" type="submit" value="Recursive Delete File/Dir" id="rcd-d">
 				</form>
 			<?php
 			}
@@ -481,6 +481,21 @@ function generateHTML($depth, $page){ ?>
 		}
 		else {
 			input.checked = false;
+		}
+		document.getElementById("rcd-r").onclick = function(e) {
+			if(!confirm("Rename this?")) {
+				e.preventDefault();
+			}
+		}
+		document.getElementById("rcd-c").onclick = function(e) {
+			if(!confirm("Copy this?")) {
+				e.preventDefault();
+			}
+		}
+		document.getElementById("rcd-d").onclick = function(e) {
+			if(!confirm("Delete this?")) {
+				e.preventDefault();
+			}
 		}
 	}
 	</script>
