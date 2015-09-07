@@ -195,21 +195,9 @@ function rcd($input,$output,$action,$pages,$pages_table) {
 }
 
 if($action == "delete") {
-	if($_GET["type"] == "dir") {
-		$real_path = cleanPath($file_path . "/" . $_GET["name"]);
-		rmdir($real_path);
-	}
-	else if($_GET["type"] == "static") {
-		$real_path = cleanPath($file_path . "/" . $_GET["name"]);
-		unlink($real_path);
-	}
-	else if($_GET["type"] == "dynamic") {
-		$real_path = cleanPath($file_path . "/" . $_GET["name"]);
-		if(file_exists($real_path)) {
-			unlink($real_path);
-		}
-		$pages_table->deleteRow($_GET["index"]);
-	}
+	$in = cleanPath($path . "/" . $_GET["name"]);
+	
+	rcd($in,"","delete",$pages_rcd,$pages_table);
 	redirect("files.php?path=" . urlencode($path));
 }
 else if($action == "newdir") {
@@ -287,7 +275,7 @@ function checkForChildren($depth, $page) {
 function generateHTML($depth, $page){ ?>
 	<tr>
 		<td class="delete">
-			<a href="files.php?action=delete&type=dynamic&path=<?php echo dirname($page->out_path) ?>&name=<?php echo basename($page->out_path) ?>&index=<?php echo $page->index ?>" style="color:#0F0F0F">×</a>
+			<a class="delete_button" href="files.php?action=delete&type=dynamic&path=<?php echo dirname($page->out_path) ?>&name=<?php echo basename($page->out_path) ?>&index=<?php echo $page->index ?>" style="color:#0F0F0F">×</a>
 		</td>
 		<td>
 			<a style="padding-left:<?php echo 20 * $depth?>px;color:#<?php if(basename($page->out_path) == "index.php"){ echo "0000FF"; } else { echo "FF00FF"; }?>" href="dynamic.php?path=<?php echo $page->out_path ?>&index=<?php echo $page->index ?>"><?php if(basename($page->out_path) == "index.php"){ echo basename(dirname($page->out_path)); } else { echo basename($page->out_path); } ?></a>
@@ -330,7 +318,7 @@ function generateHTML($depth, $page){ ?>
 					?>
 						<tr style="background-color: #F7F7F7">
 							<td class="delete">
-								<a href="files.php?action=delete&type=dir&path=<?php echo urlencode($path) ?>&name=<?php echo urlencode($file->name) ?>" style="color:#0F0F0F">×</a>
+								<a class="delete_button" href="files.php?action=delete&type=dir&path=<?php echo urlencode($path) ?>&name=<?php echo urlencode($file->name) ?>" style="color:#0F0F0F">×</a>
 							</td>
 							<td>
 								<a href="files.php?path=<?php echo urlencode($new_path) ?>" style="color:#0000FF"><?php echo $file->name ?></a><br>
@@ -345,7 +333,7 @@ function generateHTML($depth, $page){ ?>
 					?>
 						<tr>
 							<td class="delete">
-								<a href="files.php?action=delete&type=static&path=<?php echo urlencode($path) ?>&name=<?php echo urlencode($file->name) ?>" style="color:#0F0F0F">×</a>
+								<a class="delete_button" href="files.php?action=delete&type=static&path=<?php echo urlencode($path) ?>&name=<?php echo urlencode($file->name) ?>" style="color:#0F0F0F">×</a>
 							</td>
 							<td>
 								<a href="static.php?path=<?php echo urlencode($new_path) ?>" style="color:#FF0000"><?php echo $file->name ?></a><br>
@@ -360,7 +348,7 @@ function generateHTML($depth, $page){ ?>
 					?>
 						<tr>
 							<td class="delete">
-								<a href="files.php?action=delete&type=dynamic&path=<?php echo urlencode($path) ?>&name=<?php echo urlencode($file->name) ?>&index=<?php echo urlencode($file->index) ?>" style="color:#0F0F0F">×</a>
+								<a class="delete_button" href="files.php?action=delete&type=dynamic&path=<?php echo urlencode($path) ?>&name=<?php echo urlencode($file->name) ?>&index=<?php echo urlencode($file->index) ?>" style="color:#0F0F0F">×</a>
 							</td>
 							<td>
 								<a href="dynamic.php?path=<?php echo urlencode($new_path) ?>&index=<?php echo urlencode($file->index) ?>" style="color:#FF00FF"><?php echo $file->name ?></a><br>
@@ -399,7 +387,7 @@ function generateHTML($depth, $page){ ?>
 					?>
 						<tr>
 							<td class="delete">
-								<a href="files.php?action=delete&type=dynamic&path=<?php echo dirname($page->out_path) ?>&name=<?php echo basename($page->out_path) ?>&index=<?php echo $page->index ?>" style="color:#0F0F0F">×</a>
+								<a class="delete_button" href="files.php?action=delete&type=dynamic&path=<?php echo dirname($page->out_path) ?>&name=<?php echo basename($page->out_path) ?>&index=<?php echo $page->index ?>" style="color:#0F0F0F">×</a>
 							</td>
 							<td>
 								<a style="color:#<?php if(basename($page->out_path) == "index.php"){ echo "0000FF"; } else { echo "FF00FF"; }?>" href="dynamic.php?path=<?php echo $page->out_path ?>&index=<?php echo $page->index ?>"><?php if($page->out_path == "/index.php") { echo "Home"; } else if(basename($page->out_path) == "index.php"){ echo basename(dirname($page->out_path)); } else { echo basename($page->out_path); } ?></a>
@@ -495,6 +483,14 @@ function generateHTML($depth, $page){ ?>
 		document.getElementById("rcd-d").onclick = function(e) {
 			if(!confirm("Delete this?")) {
 				e.preventDefault();
+			}
+		}
+		var delete_buttons = document.getElementsByClassName("delete_button");
+		for(var i = 0;i < delete_buttons.length;i++) {
+			delete_buttons[i].onclick = function(e) {
+				if(!confirm("Delete this?")) {
+					e.preventDefault();
+				}
 			}
 		}
 	}
