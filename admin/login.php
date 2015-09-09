@@ -26,6 +26,7 @@ require("util.php");
 			Password:<br>
 			<input type="password" name="password"><br><br>
 			<input type="submit" value="Login">
+			<input type="hidden" name="fdest" value="login.php?action=fail">
 			<input type="hidden" name="dest" value="index.php">
 		</form>
 	</body>

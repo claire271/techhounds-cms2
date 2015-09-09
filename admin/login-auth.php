@@ -29,7 +29,8 @@ if($action == "login") {
 
 //Reject if no matches found
 if(!isset($_SESSION["username"])) {
-	redirect("login.php?action=fail");
+	$dest = isset($_POST["fdest"]) ? $_POST["fdest"] : "login.php?action=fail";
+	redirect($dest);
 }
 else {
 	$dest = isset($_POST["dest"]) ? $_POST["dest"] : "index.php";

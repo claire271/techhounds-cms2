@@ -277,7 +277,6 @@ if(!defined("NON-SECURED")) {
 					$parts[0] = ADMIN_RDIR . "/" . $parts[0];
 				}
 				cleanPath($parts[0]);
-				echo $parts[0];
 				if(patternMatch($parts[0],$page,true) &&
 				   patternMatch($parts[1],$action)) {
 					$allowed = $permission[0]["allowed"];
