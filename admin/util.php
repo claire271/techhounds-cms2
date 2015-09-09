@@ -240,7 +240,7 @@ if(!defined("NON-SECURED")) {
 	}
 	//Everything else. Do general permissions checking now
 	else {
-		$page = pathinfo($_SERVER['PHP_SELF'],PATHINFO_FILENAME);
+		$page = $_SERVER['PHP_SELF'];
 		$perms = strtr($_SESSION["permissions"],array("\r\n" => "\n"));
 		$permissions = explode("\n\n",$perms);
 		for($i = 0;$i < count($permissions);$i++) {
@@ -271,8 +271,14 @@ if(!defined("NON-SECURED")) {
 		$sub_perms = array();
 		foreach($permissions as $permission) {
 			if(count($permission) > 0) {
-				$parts = explode("/",$permission[0]["action"]);
-				if(patternMatch($parts[0],$page) &&
+				$parts = explode("->",$permission[0]["action"]);
+				$firstch = substr($parts[0],0,1);
+				if($firstch != "/" && !($firstch == "*" || $firstch == "?")) {
+					$parts[0] = ADMIN_RDIR . "/" . $parts[0];
+				}
+				cleanPath($parts[0]);
+				echo $parts[0];
+				if(patternMatch($parts[0],$page,true) &&
 				   patternMatch($parts[1],$action)) {
 					$allowed = $permission[0]["allowed"];
 
@@ -283,7 +289,7 @@ if(!defined("NON-SECURED")) {
 			}
 		}
 		if(!$allowed) {
-			redirect("permissions.php?action=denied");
+			redirect(cleanPath(ADMIN_RDIR . "/permissions.php?action=denied"));
 		}
 	}
 }
