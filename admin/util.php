@@ -234,8 +234,8 @@ if(!defined("NON-SECURED")) {
 	if(defined("LOGOUT")) {
 		unset( $_SESSION['username'] );
 	}
-	//See if logged on already and not on main page
-	else if(!defined("MAIN") && !defined("ERROR") && !isset($_SESSION["username"])) {
+	//See if logged on already and not login authentication page
+	else if(!defined("LOGIN") && !defined("ERROR") && !isset($_SESSION["username"])) {
 		redirect("login.php?action=fail");
 	}
 	//Everything else. Do general permissions checking now

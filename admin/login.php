@@ -14,11 +14,11 @@ require("util.php");
 			<div class="banner">Logged out!</div>
 		<?php
 		} else if ($action == "fail") { ?>
-			<div class="banner fail">You fail!</div>
+			<div class="banner fail">Invalid Credentials!</div>
 		<?php
 		}
 		?>
-		<form id="login" action="index.php?action=login" method="POST">
+		<form id="login" action="login-auth.php?action=login" method="POST">
 			<h2>TechHOUNDS</h2>
 			<h3>Admin Login</h3>
 			Username:<br>
@@ -26,6 +26,7 @@ require("util.php");
 			Password:<br>
 			<input type="password" name="password"><br><br>
 			<input type="submit" value="Login">
+			<input type="hidden" name="dest" value="/index.php">
 		</form>
 	</body>
 </html>
