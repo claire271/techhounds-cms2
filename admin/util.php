@@ -236,7 +236,12 @@ if(!defined("NON-SECURED")) {
 	}
 	//See if logged on already and not login authentication page
 	else if(!defined("LOGIN") && !defined("ERROR") && !isset($_SESSION["username"])) {
-		redirect("login.php?action=fail");
+		if(isset($_POST["username"])) {
+			redirect("login.php?action=fail");
+		}
+		else {
+			redirect("login.php");
+		}
 	}
 	//Everything else. Do general permissions checking now
 	else {
