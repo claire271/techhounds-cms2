@@ -124,7 +124,7 @@ foreach($pages as $page) {
 function rcd($input,$output,$action,$pages,$pages_table) {
 	$in_path = cleanPath(ROOT_DIR . "/" . $input);
 	$out_path = cleanPath(ROOT_DIR . "/" . $output);
-	echo $in_path . "<br>";
+	//echo $in_path . "<br>";
 	if(is_dir($in_path)) {
 		if($action == "copy" || $action == "rename") {
 			mkdir($out_path,0775,true);
@@ -222,7 +222,7 @@ else if($action == "newdynamic") {
 	if($_SESSION["view"] == "simple"){
 		$parent = $_POST["parent"];
 		$real_path = cleanPath(ROOT_DIR . $parent . $_POST["name"]);
-		echo $real_path;
+		//echo $real_path;
 		if (!file_exists($real_path)) {
 			mkdir($real_path, 0775, true);
 			chmod($real_path,0775);
