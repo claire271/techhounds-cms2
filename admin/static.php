@@ -33,7 +33,7 @@ if($action == "save") {
 		<div class="body-container">
 			<h1><?php echo basename($path) ?></h1>
 			<form action="static.php?action=save&path=<?php echo urlencode($path) ?>" method="POST">
-				<textarea name="contents" data-editor="<?php echo pathinfo($path,PATHINFO_EXTENSION) ?>" placeholder="The contents of the file" style="height: 30em; width: 80%;"><?php echo htmlspecialchars($contents) ?></textarea><br>
+				<textarea name="contents" data-editor="<?php echo pathinfo($path,PATHINFO_EXTENSION) ?>" placeholder="The contents of the file" style="height: 30em; width: 100%;"><?php echo htmlspecialchars($contents) ?></textarea><br>
 				<input type="submit" value="Save">
 				<a class="button" href="static.php?path=<?php echo urlencode($path) ?>">Cancel</a>
 				<a class="button" href="files.php?path=<?php echo urlencode(dirname($path)) ?>">Back</a>
