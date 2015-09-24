@@ -12,7 +12,9 @@ if($action == "userpass" || $action == "s_userpass" ||
    $action == "adduser" || $action == "s_adduser" ||
    $action == "perms" || $action == "s_perms" ||
    $action == "delete") {
-	$row = $users->getRow($_GET["index"]);
+	if($action != "adduser") {
+		$row = $users->getRow($_GET["index"]);
+	}
 	$allowed = true;
 	foreach($sub_perms as $permission) {
 		if(patternMatch($permission["action"],$row->name)) {
@@ -36,8 +38,8 @@ if($action == "userpass" || $action == "s_userpass" ||
 			<h1>Users</h1>
 			<?php
 			if($action == "userpass" || $action == "adduser") {
-				$row = $users->getRow($_GET["index"]);
 				if($action == "userpass") {
+					$row = $users->getRow($_GET["index"]);
 					echo "User " . $row->index . "<br>";
 				} ?>
 				<form action="users.php?action=<?php if ($action == "userpass"){ echo('s_userpass&index='); echo $row->index; } else if ($action == "adduser"){ echo('s_adduser');} ?>" method="POST">
