@@ -40,7 +40,7 @@ if($action == "save") {
 	$output = template_match($output,"template_clear",$page);
 
 	file_put_contents(ROOT_DIR . $path,$output);
-	chmod(ROOT_DIR . $path,0644);
+	chmod(ROOT_DIR . $path,FILE_PERM);
 	
 	redirect("dynamic.php?path=" . urlencode($path) . "&index=" . urlencode($page->index));
 }

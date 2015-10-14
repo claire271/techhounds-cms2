@@ -6,6 +6,9 @@ define("ROOT_DIR",cleanPath($_SERVER['DOCUMENT_ROOT']));
 define("ADMIN_RDIR",cleanPath("/admin/"));
 define("ADMIN_DIR",cleanPath(ROOT_DIR . "/" . ADMIN_RDIR));
 
+define("FILE_PERM",0664);
+define("DIR_PERM",0775);
+
 ini_set("log_errors", 1);
 ini_set("error_log", cleanPath(ADMIN_DIR . "/error.log"));
 
