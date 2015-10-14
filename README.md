@@ -5,4 +5,11 @@ Checkout the repo, then run `git submodule update --init` to get all of the depe
 
 Be sure to install the php zip extension and put jquery-1.11.3.js in the root directory.
 Selinux must also allow php to write to the web dir or be disabled.
-Any user that wants to edit files on the server (e.g. through ssh) must be part of the apache group.
+
+If following these steps is not possible on the server, complete these steps on a different computer and then upload it to the server.
+#Initial setup
+The page `<server url>/admin/init.php` must be visited first to initialize the data base.
+
+`<server url>/admin/` can now be visited. The default login is username:`admin` password:`password`.
+
+Additional documentation can be found within the main admin page.
