@@ -22,9 +22,15 @@
 			$admin->permissions = "";
 			$admin->write();
 		}
+		else {
+			echo("cms2-users table exists. Doing nothing.<br/>");
+		}
 		if(!Table::exists("cms2-pages")) {
 			echo("cms2-pages table is missing! Recreating now.<br/>");
 			$pages = Table::create("cms2-pages",array("out_path","template_path","params","body","date"));
+		}
+		else {
+			echo("cms2-pages table exists. Doing nothing.<br/>");
 		}
 		?>
 	</body>
