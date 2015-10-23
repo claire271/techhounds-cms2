@@ -26,6 +26,41 @@ if($action == "userpass" || $action == "s_userpass" ||
 	}
 }
 
+if($action == "s_userpass" || $action == "s_adduser") {
+	if($action == "s_userpass"){
+		$row = $users->getRow($_GET["index"]);
+	}
+	else if ($action == "s_adduser"){
+		$row = $users->createRow();
+	}
+	$row->name = $_POST["username"];
+	
+	//$row->hash = hash("md5", $_POST["password"]);
+
+    $row->salt = hash("sha512",mt_rand());
+    $row->hash = $row->salt . $_POST["password"];
+    for($i = 0;$i < 100000;$i++) {
+	    $row->hash = hash("sha512",$row->hash);
+    }
+
+	if($action == "s_userpass") {
+		$_SESSION["username"] = $row->name;
+	}
+	$row->write();
+
+    redirect("users.php");
+}
+else if($action == "s_perms") {
+	$row = $users->getRow($_GET["index"]);
+	$row->permissions = $_POST["permissions"];
+	$row->write();
+	redirect("users.php");
+}
+else if($action == "delete") {
+	$users->deleteRow($_GET["index"]);
+	redirect("users.php");
+}
+
 ?>
 <html>
 	<head>
@@ -50,30 +85,6 @@ if($action == "userpass" || $action == "s_userpass" ||
 				</form>
 			<?php
 			}
-			else if($action == "s_userpass" || $action == "s_adduser") {
-				if($action == "s_userpass"){
-					$row = $users->getRow($_GET["index"]);
-				}
-				else if ($action == "s_adduser"){
-					$row = $users->createRow();
-				}
-				$row->name = $_POST["username"];
-				
-    			//$row->hash = hash("md5", $_POST["password"]);
-
-			    $row->salt = hash("sha512",mt_rand());
-			    $row->hash = $row->salt . $_POST["password"];
-			    for($i = 0;$i < 100000;$i++) {
-				    $row->hash = hash("sha512",$row->hash);
-			    }
-
-				if($action == "s_userpass") {
-	    			$_SESSION["username"] = $row->name;
-				}
-				$row->write();
-		
-			    redirect("users.php");
-			}
 			else if($action == "perms") {
 				$row = $users->getRow($_GET["index"]);
 				echo "User " . $row->index . ": " . $row->name . "<br>"; ?>
@@ -84,16 +95,6 @@ if($action == "userpass" || $action == "s_userpass" ||
 					<a class="button" href="users.php">Cancel</a>
 				</form>
 			<?php
-			}
-			else if($action == "s_perms") {
-				$row = $users->getRow($_GET["index"]);
-				$row->permissions = $_POST["permissions"];
-				$row->write();
-				redirect("users.php");
-			}
-			else if($action == "delete") {
-				$users->deleteRow($_GET["index"]);
-				redirect("users.php");
 			}
 			else {
 				$rows = $users->getRows();
