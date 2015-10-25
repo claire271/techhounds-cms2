@@ -89,7 +89,9 @@ function template_replace($input,$page,$vars) {
 	else if(strlen($input) > strlen("eval:") && substr($input,0,strlen("eval:")) == "eval:") {
 		$input = trim(substr($input,strlen("eval:")));
 		ob_start();
+		$token = ini_set('display_errors', true);
 		eval($input);
+		ini_set('display_errors', $token);
 		return ob_get_clean();
 	}
 	else {
