@@ -40,7 +40,7 @@ if($action == "save") {
 	$output = template_match($output,"template_clear",$page);
 
 	file_put_contents(ROOT_DIR . $path,$output);
-	chmod(ROOT_DIR . $path,0664);
+	chmod(ROOT_DIR . $path,FILE_PERM);
 	
 	redirect("dynamic.php?path=" . urlencode($path) . "&index=" . urlencode($page->index));
 }
@@ -59,8 +59,8 @@ $extension = pathinfo($path,PATHINFO_EXTENSION);
 			<form action="dynamic.php?action=save&path=<?php echo urlencode($path) ?>&index=<?php echo urlencode($page->index) ?>" method="POST">
 				<h1><?php echo $path ?></h1>
 				<input type="text" name="template_path" placeholder="Template Path" value="<?php echo htmlspecialchars($page->template_path) ?>"><br>
-				<textarea name="body" data-editor="<?php echo $extension ?>" placeholder="The body of the file" style="height: 30em; width: 80%;"><?php echo htmlspecialchars($page->body) ?></textarea><br>
-				<textarea name="params" placeholder="The parameters of the file" style="height: 30em; width: 80%;"><?php echo htmlspecialchars($page->params) ?></textarea><br>
+				<textarea name="body" data-editor="<?php echo $extension ?>" placeholder="The body of the file" style="height: 30em; width: 100%;"><?php echo htmlspecialchars($page->body) ?></textarea><br>
+				<textarea name="params" placeholder="The parameters of the file" style="height: 30em; width: 100%;"><?php echo htmlspecialchars($page->params) ?></textarea><br>
 				Last edited: <?php echo htmlspecialchars($page->date) ?><br>
 				<input type="submit" value="Save">
 				<a class="button" href="dynamic.php?path=<?php echo urlencode($path) ?>&index=<?php echo urlencode($page->index) ?>">Cancel</a>

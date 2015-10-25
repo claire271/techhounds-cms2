@@ -124,11 +124,11 @@ foreach($pages as $page) {
 function rcd($input,$output,$action,$pages,$pages_table) {
 	$in_path = cleanPath(ROOT_DIR . "/" . $input);
 	$out_path = cleanPath(ROOT_DIR . "/" . $output);
-	echo $in_path . "<br>";
+	//echo $in_path . "<br>";
 	if(is_dir($in_path)) {
 		if($action == "copy" || $action == "rename") {
-			mkdir($out_path,0775,true);
-			chmod($out_path,0775);
+			mkdir($out_path,DIR_PERM,true);
+			chmod($out_path,DIR_PERM);
 		}
 
 		$files = scandir($in_path);
@@ -202,14 +202,14 @@ if($action == "delete") {
 }
 else if($action == "newdir") {
 	$real_path = cleanPath($file_path . "/" . $_POST["name"]);
-	mkdir($real_path,0775,true);
-	chmod($real_path,0775);
+	mkdir($real_path,DIR_PERM,true);
+	chmod($real_path,DIR_PERM);
 	redirect("files.php?path=" . urlencode($path));
 }
 else if($action == "newstatic") {
 	$real_path = cleanPath($file_path . "/" . $_POST["name"]);
 	touch($real_path);
-	chmod($real_path,0664);
+	chmod($real_path,FILE_PERM);
 	if($_SESSION["view"] == "simple"){
 		redirect("files.php");
 	}
@@ -222,10 +222,10 @@ else if($action == "newdynamic") {
 	if($_SESSION["view"] == "simple"){
 		$parent = $_POST["parent"];
 		$real_path = cleanPath(ROOT_DIR . $parent . $_POST["name"]);
-		echo $real_path;
+		//echo $real_path;
 		if (!file_exists($real_path)) {
-			mkdir($real_path, 0775, true);
-			chmod($real_path,0775);
+			mkdir($real_path, DIR_PERM, true);
+			chmod($real_path,DIR_PERM);
 		}
 		$page->out_path = cleanPath($parent . $_POST["name"] . "/index.php");
 		$page->write();

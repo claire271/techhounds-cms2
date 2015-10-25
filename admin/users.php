@@ -12,7 +12,9 @@ if($action == "userpass" || $action == "s_userpass" ||
    $action == "adduser" || $action == "s_adduser" ||
    $action == "perms" || $action == "s_perms" ||
    $action == "delete") {
-	$row = $users->getRow($_GET["index"]);
+	if($action != "adduser") {
+		$row = $users->getRow($_GET["index"]);
+	}
 	$allowed = true;
 	foreach($sub_perms as $permission) {
 		if(patternMatch($permission["action"],$row->name)) {
@@ -22,6 +24,41 @@ if($action == "userpass" || $action == "s_userpass" ||
 	if(!$allowed) {
 		redirect("permissions.php?action=denied");
 	}
+}
+
+if($action == "s_userpass" || $action == "s_adduser") {
+	if($action == "s_userpass"){
+		$row = $users->getRow($_GET["index"]);
+	}
+	else if ($action == "s_adduser"){
+		$row = $users->createRow();
+	}
+	$row->name = $_POST["username"];
+	
+	//$row->hash = hash("md5", $_POST["password"]);
+
+    $row->salt = hash("sha512",mt_rand());
+    $row->hash = $row->salt . $_POST["password"];
+    for($i = 0;$i < 100000;$i++) {
+	    $row->hash = hash("sha512",$row->hash);
+    }
+
+	if($action == "s_userpass") {
+		$_SESSION["username"] = $row->name;
+	}
+	$row->write();
+
+    redirect("users.php");
+}
+else if($action == "s_perms") {
+	$row = $users->getRow($_GET["index"]);
+	$row->permissions = $_POST["permissions"];
+	$row->write();
+	redirect("users.php");
+}
+else if($action == "delete") {
+	$users->deleteRow($_GET["index"]);
+	redirect("users.php");
 }
 
 ?>
@@ -36,8 +73,8 @@ if($action == "userpass" || $action == "s_userpass" ||
 			<h1>Users</h1>
 			<?php
 			if($action == "userpass" || $action == "adduser") {
-				$row = $users->getRow($_GET["index"]);
 				if($action == "userpass") {
+					$row = $users->getRow($_GET["index"]);
 					echo "User " . $row->index . "<br>";
 				} ?>
 				<form action="users.php?action=<?php if ($action == "userpass"){ echo('s_userpass&index='); echo $row->index; } else if ($action == "adduser"){ echo('s_adduser');} ?>" method="POST">
@@ -47,30 +84,6 @@ if($action == "userpass" || $action == "s_userpass" ||
 				<a class="button" href="users.php">Cancel</a>
 				</form>
 			<?php
-			}
-			else if($action == "s_userpass" || $action == "s_adduser") {
-				if($action == "s_userpass"){
-					$row = $users->getRow($_GET["index"]);
-				}
-				else if ($action == "s_adduser"){
-					$row = $users->createRow();
-				}
-				$row->name = $_POST["username"];
-				
-    			//$row->hash = hash("md5", $_POST["password"]);
-
-			    $row->salt = hash("sha512",mt_rand());
-			    $row->hash = $row->salt . $_POST["password"];
-			    for($i = 0;$i < 100000;$i++) {
-				    $row->hash = hash("sha512",$row->hash);
-			    }
-
-				if($action == "s_userpass") {
-	    			$_SESSION["username"] = $row->name;
-				}
-				$row->write();
-		
-			    redirect("users.php");
 			}
 			else if($action == "perms") {
 				$row = $users->getRow($_GET["index"]);
@@ -82,16 +95,6 @@ if($action == "userpass" || $action == "s_userpass" ||
 					<a class="button" href="users.php">Cancel</a>
 				</form>
 			<?php
-			}
-			else if($action == "s_perms") {
-				$row = $users->getRow($_GET["index"]);
-				$row->permissions = $_POST["permissions"];
-				$row->write();
-				redirect("users.php");
-			}
-			else if($action == "delete") {
-				$users->deleteRow($_GET["index"]);
-				redirect("users.php");
 			}
 			else {
 				$rows = $users->getRows();

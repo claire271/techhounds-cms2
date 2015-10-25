@@ -28,7 +28,7 @@ if($action == "regenerate") {
 		$output = template_match($output,"template_clear",$page);
 		
 		file_put_contents(ROOT_DIR . $page->out_path,$output);
-		chmod(ROOT_DIR . $page->out_path,0664);
+		chmod(ROOT_DIR . $page->out_path,FILE_PERM);
 	}
 	redirect("index.php");
 }
@@ -64,7 +64,7 @@ if($action == "hash") {
 	hash_files("/",$zip);
 
 	$zip->close();
-	chmod(cleanPath(ADMIN_DIR . "/tmp/hash.zip"),0664);
+	chmod(cleanPath(ADMIN_DIR . "/tmp/hash.zip"),FILE_PERM);
 
 	header('Content-Description: File Transfer');
     header('Content-Type: application/octet-stream');
@@ -138,7 +138,7 @@ if($action == "backup") {
 		if ($_FILES["hash"]["error"] == UPLOAD_ERR_OK) {
 			$tmp_name = $_FILES["hash"]["tmp_name"];
 			move_uploaded_file($tmp_name, cleanPath(ADMIN_DIR . "/tmp/hash.zip"));
-			chmod(cleanPath(ADMIN_DIR . "/tmp/hash.zip"),0664);
+			chmod(cleanPath(ADMIN_DIR . "/tmp/hash.zip"),FILE_PERM);
 		}
 	}
 	$hzip = new ZipArchive();
@@ -152,7 +152,7 @@ if($action == "backup") {
 
 	$hzip->close();
 	$zip->close();
-	chmod(cleanPath(ADMIN_DIR . "/tmp/backup.zip"),0664);
+	chmod(cleanPath(ADMIN_DIR . "/tmp/backup.zip"),FILE_PERM);
 
 	header('Content-Description: File Transfer');
     header('Content-Type: application/octet-stream');
@@ -171,7 +171,7 @@ if($action == "restore") {
 		if ($_FILES["backup"]["error"] == UPLOAD_ERR_OK) {
 			$tmp_name = $_FILES["backup"]["tmp_name"];
 			move_uploaded_file($tmp_name, cleanPath(ADMIN_DIR . "/tmp/backup.zip"));
-			chmod(cleanPath(ADMIN_DIR . "/tmp/backup.zip"),0664);
+			chmod(cleanPath(ADMIN_DIR . "/tmp/backup.zip"),FILE_PERM);
 		}
 	}
 
@@ -183,11 +183,11 @@ if($action == "restore") {
 		$filepath = cleanPath(ROOT_DIR . "/" . $zip->getNameIndex($i));
 		if(substr($filename,-1) == "/") {
 			mkdir($filepath);
-			chmod($filepath,0775);
+			chmod($filepath,DIR_PERM);
 		}
 		else {
 			file_put_contents($filepath,$zip->getFromIndex($i));
-			chmod($filepath,0664);
+			chmod($filepath,FILE_PERM);
 		}
 	}
 

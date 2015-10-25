@@ -20,7 +20,7 @@ for($i = 0;$i < count($_FILES["files"]["error"]);$i++) {
 		$tmp_name = $_FILES["files"]["tmp_name"][$i];
 		$name = $_FILES["files"]["name"][$i];
 		move_uploaded_file($tmp_name, "$uploads_dir/$name");
-		chmod("$uploads_dir/$name",0664);
+		chmod("$uploads_dir/$name",FILE_PERM);
 	}
 }
 
