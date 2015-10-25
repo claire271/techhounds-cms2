@@ -31,7 +31,12 @@ if($action == "save") {
 
 	//Templating stuff time
 	if($page->template_path != "") {
-		$template = file_get_contents(cleanPath(ROOT_DIR . $page->template_path));
+		$template_path = $page->template_path;
+		if($template_path[0] != "/") {
+			$template_path = cleanPath(dirname($page->out_path) . "/" . $template_path);
+		}
+
+		$template = file_get_contents(cleanPath(ROOT_DIR . $template_path));
 		$output = template_match($template,"template_replace",$page);
 	}
 	else {

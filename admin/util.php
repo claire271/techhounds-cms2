@@ -53,6 +53,11 @@ function template_replace($input,$page,$vars) {
 		for($i = 1;$i < count($parts);$i++) {
 			$output .= "{{varset:" . ($i - 1) . ":" . $parts[$i] . "}}";
 		}
+
+		if($parts[0][0] != "/") {
+			$parts[0] = cleanPath(dirname($page->out_path) . "/" . $parts[0]);
+		}
+
 		$output .= file_get_contents(cleanPath(ROOT_DIR . $parts[0]));
 		for($i = 1;$i < count($parts);$i++) {
 			$output .= "{{varclear:" . ($i - 1) . "}}";
@@ -110,10 +115,10 @@ function template_replace($input,$page,$vars) {
 		}
 		else {
 			if($input[0] == "/") {
-				return cleanPath(CDN_URL . $input);
+				return cleanPath(CDN_URL . "/" . $input);
 			}
 			else {
-				return cleanPath(CDN_URL . dirname($page->out_path) . $input);
+				return cleanPath(CDN_URL . "/" . dirname($page->out_path) . "/" . $input);
 			}
 		}
 	}
