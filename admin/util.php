@@ -6,6 +6,9 @@ define("ROOT_DIR",cleanPath($_SERVER['DOCUMENT_ROOT']));
 define("ADMIN_RDIR",cleanPath("/admin/"));
 define("ADMIN_DIR",cleanPath(ROOT_DIR . "/" . ADMIN_RDIR));
 
+//Comment out for no CDN
+define("CDN_URL","http://techhounds.tigerhuang.com");
+
 if(!defined("FILE_PERM")) define("FILE_PERM",0664);
 if(!defined("DIR_PERM")) define("DIR_PERM",0775);
 
@@ -14,11 +17,14 @@ ini_set("error_log", cleanPath(ADMIN_DIR . "/error.log"));
 
 //Always returns with no trailing slash
 function cleanPath($path) {
+	$path = trim($path);
 	$path = str_replace("\\","/",$path);
-	$leading = substr($path,0,1) == "/";
+
+	$matched = preg_match("/^(http(s){0,1}:\\/){0,1}\\//",$path,$matches);
+	$prefix = $matched ? $matches[0] : "";
+	$path = substr($path,strlen($prefix));
 
 	$substrings = explode("/",$path);
-	
 	$parts = array();
 	foreach($substrings as $substring) {
 		if($substring == "..") {
@@ -31,7 +37,7 @@ function cleanPath($path) {
 		}
 	}
 
-	return ($leading ? "/" : "") . implode("/",$parts);
+	return $prefix . implode("/",$parts);
 }
 
 //Template clearing function
@@ -96,6 +102,20 @@ function template_replace($input,$page,$vars) {
 		eval($input);
 		ini_set('display_errors', $token);
 		return ob_get_clean();
+	}
+	else if(strlen($input) > strlen("cdn:") && substr($input,0,strlen("cdn:")) == "cdn:") {
+		$input = trim(substr($input,strlen("cdn:")));
+		if(!defined("CDN_URL")) {
+			return $input;
+		}
+		else {
+			if($input[0] == "/") {
+				return cleanPath(CDN_URL . $input);
+			}
+			else {
+				return cleanPath(CDN_URL . dirname($page->out_path) . $input);
+			}
+		}
 	}
 	else {
 		return $page->$input;
