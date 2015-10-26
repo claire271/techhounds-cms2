@@ -122,6 +122,12 @@ function template_replace($input,$page,$vars) {
 			}
 		}
 	}
+	else if(strlen($input) > strlen("md:") && substr($input,0,strlen("md:")) == "md:") {
+		$input = trim(substr($input,strlen("md:")));
+		$Parsedown = new Parsedown();
+		$output = $Parsedown->text($input);
+		return $output;
+	}
 	else {
 		return $page->$input;
 	}
