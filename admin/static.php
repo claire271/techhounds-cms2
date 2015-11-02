@@ -33,7 +33,11 @@ if($action == "save") {
 		<div class="body-container">
 			<h1><?php echo basename($path) ?></h1>
 			<form action="static.php?action=save&path=<?php echo urlencode($path) ?>" method="POST">
-				<textarea name="contents" data-editor="<?php echo pathinfo($path,PATHINFO_EXTENSION) ?>" placeholder="The contents of the file" style="height: 30em; width: 100%;"><?php echo htmlspecialchars($contents) ?></textarea><br>
+				<div id="editorSelector">
+					<div style="cursor: pointer; display: inline-block; background-color: #DFDFDF" onclick="enableAce();">Enable Ace Editor</div>
+					<div style="cursor: pointer; display: inline-block; background-color: #DFDFDF" onclick="enableCSV();">Enable CSV Editor</div>
+				</div>
+				<textarea class="editorArea" name="contents" data-editor="<?php echo pathinfo($path,PATHINFO_EXTENSION) ?>" placeholder="The contents of the file" style="height: 30em; width: 100%;"><?php echo htmlspecialchars($contents) ?></textarea><br>
 				<input type="submit" value="Save">
 				<a class="button" href="static.php?path=<?php echo urlencode($path) ?>">Cancel</a>
 				<a class="button" href="files.php?path=<?php echo urlencode(dirname($path)) ?>">Back</a>
@@ -41,10 +45,30 @@ if($action == "save") {
 		</div>
 	</body>
 	<script src="/ace-builds/src-noconflict/ace.js" type="text/javascript" charset="utf-8"></script>
+	<script src="/spreadsheet/spreadsheet.js" type="text/javascript" charset="utf-8"></script>
 	<script src="/jquery-1.11.3.js" type="text/javascript" charset="utf-8"></script>
 	<script>
+	//Extended editor stuff
+	function removeSelector() {
+		document.getElementById("editorSelector").remove();
+	}
+	//CSV Stuff
+	function enableCSV() {
+		removeSelector();
+		var textareas = document.getElementsByClassName("editorArea");
+		for(var i = 0;i < textareas.length;i++) {
+			(function() {
+				var spreadsheet = new Spreadsheet(textareas[i]);
+				var textarea = textareas[i];
+				textareas[i].parentNode.onsubmit = function() {
+					textarea.value = spreadsheet.export();
+				};
+			})();
+		}
+	}
 	//Ace stuff
-	$(function () {
+	function enableAce() {
+		removeSelector();
 		$('textarea[data-editor]').each(function () {
 			var textarea = $(this);
 			
@@ -82,6 +106,6 @@ if($action == "save") {
 				textarea.val(editor.getSession().getValue());
 			})
 		});
-	});
+	}
 	</script>
 </html>

@@ -1,4 +1,4 @@
-<?php require("/var/www/techhounds-cms2/admin/util.php");?>
+<?php require("/home/tigerhuang/techhounds2/admin/util.php");?>
 <html>
   <head>
     <meta charset="utf-8">

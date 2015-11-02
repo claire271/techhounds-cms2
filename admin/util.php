@@ -7,7 +7,7 @@ define("ADMIN_RDIR",cleanPath("/admin/"));
 define("ADMIN_DIR",cleanPath(ROOT_DIR . "/" . ADMIN_RDIR));
 
 //Comment out for no CDN
-define("CDN_URL","http://techhounds.tigerhuang.com");
+define("CDN_URL","http://techhounds2.tigerhuang.com");
 
 if(!defined("FILE_PERM")) define("FILE_PERM",0664);
 if(!defined("DIR_PERM")) define("DIR_PERM",0775);
