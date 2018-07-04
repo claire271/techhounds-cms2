@@ -1,12 +1,12 @@
 [submodule "db"]
 	path = db
 	url = https://github.com/tigerh/db.git
-[submodule "spreadsheet"]
-	path = spreadsheet
-	url = https://github.com/tigerh/spreadsheet.git
 [submodule "ace-builds"]
 	path = ace-builds
 	url = https://github.com/ajaxorg/ace-builds.git
 [submodule "parsedown"]
 	path = parsedown
 	url = https://github.com/erusev/parsedown.git
+[submodule "spreadsheet"]
+	path = spreadsheet
+	url = https://github.com/tigerh/spreadsheet.git
